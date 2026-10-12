@@ -22,3 +22,4 @@ function createBoard() {
        gameBoard.append(square)
     })
  }
+createBoard()
