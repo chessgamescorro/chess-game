@@ -2,17 +2,34 @@
     width: 320px;
     height: 320px;
     background-color: black;
+    display: grid;
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(8, 40px);
 }
 
 .square {
     height: 40px;
     width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .beige {
-    background-color: rgb(110, 110, 98);
+    background-color: rgb(238, 238, 210);
 }
 
 .brown {
-    background-color: brown;
+    background-color: rgb(118, 150, 86);
+}
+
+.piece,
+.piece svg {
+    width: 100%;
+    height: 100%;
+}
+
+.piece svg {
+    display: block;
+    fill: currentColor;
 }

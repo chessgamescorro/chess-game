@@ -16,11 +16,15 @@ const startPieces = [
 ]
 
 function createBoard() {
-    startPieces.forEach((startPiece) => {
+    startPieces.forEach((startPiece, index) => {
       const square = document.createElement('div')
       square.classList.add('square')
-      square.classList.add('beige')
-      square.classList.add('brown')
+      const row = Math.floor(index / width)
+      const column = index % width
+      square.classList.add((row + column) % 2 === 0 ? 'beige' : 'brown')
+      if (startPiece) {
+        square.innerHTML = startPiece
+      }
       gameBoard.append(square)
     })
  }
