@@ -1,3 +1,4 @@
+/* Lay out the eight-by-eight board with fixed-size squares. */
 #gameboard {
     width: 320px;
     height: 320px;
@@ -7,6 +8,7 @@
     grid-template-rows: repeat(8, 40px);
 }
 
+/* Center each piece within its board square. */
 .square {
     height: 40px;
     width: 40px;
@@ -15,6 +17,7 @@
     justify-content: center;
 }
 
+/* Apply alternating colors to the two square classes. */
 .beige {
     background-color: rgb(238, 238, 210);
 }
@@ -23,17 +26,20 @@
     background-color: rgb(118, 150, 86);
 }
 
+/* Scale each piece and its SVG to fill the containing square. */
 .piece,
 .piece svg {
     width: 100%;
     height: 100%;
 }
 
+/* Use a dark fill for pieces unless the white-piece rule overrides it. */
 .piece svg {
     display: block;
     fill: black;
 }
 
+/* Distinguish the lower side's pieces with a light fill and dark outline. */
 .piece.white svg {
     fill: white;
     stroke: #333;

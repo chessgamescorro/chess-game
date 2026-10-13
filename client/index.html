@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Set the document encoding and adapt the layout to the device width. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Game</title>
+    <!-- Load the styles used by the chess board and page. -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,14 +13,18 @@
 
     <p>Gebouwd in HTML, CSS, JavaScript door Redouan, Mikolaj, Wiktoria, Grantas</p>
 
+    <!-- Collect a player's name. (Not worked out yet) -->
     <label for="nameInput">Name:</label>
     <input type="text" id="nameInput" placeholder="Enter your name">
     <button id="submitButton">Submit</button>
 
+    <!-- JavaScript fills this container with the 64 chessboard squares. (Not worked out yet) -->
     <div id="gameboard"></div>
+    <!-- Display the current player and any game information. -->
     <p>It's <span id="player"></span>'s turn</p>
     <p id="info-display"></p>
 
+    <!-- Define the chess-piece markup before running the board setup code. -->
     <script src="piece.js"></script>
     <script src="main.js"></script>
 
