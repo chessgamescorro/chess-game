@@ -1,16 +1,35 @@
-let selected = null
+let selected = null;
 
 gameBoard.addEventListener('click', e => {
-  const square = e.target.closest('.square')
-  const piece = e.target.closest('.piece')
+    const square = e.target.closest('.square');
+    const piece = e.target.closest('.piece');
 
-  if (!selected) {
-    selected = piece                       // first click: pick up (null if empty square)
-  } else {
-    const target = square.querySelector('.piece')
-    if (target !== selected) target?.remove()  // capture whatever is there
-    square.append(selected)                // second click: put down
-    selected = null
-  }
-})
+    if (!square) return;
 
+    if (!selected) {
+        // Selecteer een schaakstuk
+        if (!piece) return;
+
+        selected = piece;
+
+        // Maak het huidige vakje paars
+        selected.parentElement.classList.add('selected');
+
+    } else {
+        // Bewaar het oude vakje voordat de pion verplaatst wordt
+        const oldSquare = selected.parentElement;
+        const target = square.querySelector('.piece');
+
+        if (target !== selected) {
+            target?.remove();
+        }
+
+        // Verplaats de pion
+        square.append(selected);
+
+        // Verwijder de paarse rand van het oude vakje
+        oldSquare.classList.remove('selected');
+
+        selected = null;
+    }
+});
