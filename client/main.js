@@ -31,6 +31,7 @@ function createBoard() {
       // Add the piece markup and assign its side based on its starting rank.
       if (startPiece) {
         square.innerHTML = startPiece
+        square.firstChild?.setAttribute('draggable', true)
         square.querySelector('svg').classList.add(index < 16 ? 'black' : 'white')
       }
 
@@ -48,3 +49,14 @@ function createBoard() {
 
 // Render the initial chess position when the script loads.
 createBoard()
+
+
+const allSquares = document.querySelectorAll("#gameboard .square")
+
+allSquares.forEach(square => {
+  square.addEventListener('dragstart', dragStart)
+})
+
+function dragStart (e) {
+  console.log(e)
+}
