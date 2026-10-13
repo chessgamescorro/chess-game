@@ -34,6 +34,13 @@ function createBoard() {
         square.querySelector('svg').classList.add(index < 16 ? 'black' : 'white')
       }
 
+      // Set the piece color based on its starting rank.
+      if (index <= 15) {
+        square.querySelector('svg').classList.add('black')
+      } else if (index >= 48) {
+        square.querySelector('svg').classList.add('white')
+      }
+
       // Attach the completed square to the board.
       gameBoard.append(square)
     })

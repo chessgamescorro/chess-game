@@ -33,15 +33,17 @@
     height: 100%;
 }
 
-/* Use a dark fill for pieces unless the white-piece rule overrides it. */
-.piece svg {
-    display: block;
-    fill: black;
+/* Distinguish the lower side's pieces with a light fill and dark outline. */
+.white {
+    fill: white;
+    stroke: rgb(22, 22, 0);
+    stroke-width: 16px;
 }
 
-/* Distinguish the lower side's pieces with a light fill and dark outline. */
-.piece.white svg {
-    fill: white;
-    stroke: #333;
-    stroke-width: 12px;
+
+/* Distinguish the upper side's pieces with a dark fill and light outline. */
+.black {
+    fill: black;
+    stroke: rgb(238, 238, 210);
+    stroke-width: 16px;
 }
