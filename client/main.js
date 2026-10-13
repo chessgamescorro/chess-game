@@ -24,11 +24,7 @@ function createBoard() {
       square.classList.add((row + column) % 2 === 0 ? 'beige' : 'brown')
       if (startPiece) {
         square.innerHTML = startPiece
-        if (index < 16) {
-          square.querySelector('svg').classList.add('black')
-        } else if (index >= 48) {
-          piece.classList.add('white')
-        }
+        square.querySelector('svg').classList.add(index < 16 ? 'black' : 'white')
       }
 
       gameBoard.append(square)
