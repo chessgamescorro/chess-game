@@ -37,13 +37,13 @@
 .white {
     fill: white;
     stroke: rgb(22, 22, 0);
-    stroke-width: 16px;
+    stroke-width: 32px;
 }
 
 
 /* Distinguish the upper side's pieces with a dark fill and light outline. */
 .black {
     fill: black;
-    stroke: rgb(238, 238, 210);
-    stroke-width: 16px;
+    stroke: rgb(255, 255, 255);
+    stroke-width: 32px;
 }
