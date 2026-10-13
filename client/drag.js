@@ -13,4 +13,3 @@ gameBoard.addEventListener('click', e => {
     selected = null
   }
 })
-
