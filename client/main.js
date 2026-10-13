@@ -24,17 +24,11 @@ function createBoard() {
       square.classList.add((row + column) % 2 === 0 ? 'beige' : 'brown')
       if (startPiece) {
         square.innerHTML = startPiece
-      }
-
-      if (i <= 15) {
-        square.firstChild.firstChild.classList.add('black')
-      }
-
-      if (i <= 48) {
-        square.firstChild.firstChild.classList.add('white')
+        square.querySelector('svg').classList.add(index < 16 ? 'black' : 'white')
       }
 
       gameBoard.append(square)
     })
  }
 createBoard()
+
