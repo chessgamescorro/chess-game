@@ -50,13 +50,3 @@ function createBoard() {
 // Render the initial chess position when the script loads.
 createBoard()
 
-
-const allSquares = document.querySelectorAll("#gameboard .square")
-
-allSquares.forEach(square => {
-  square.addEventListener('dragstart', dragStart)
-})
-
-function dragStart (e) {
-  console.log(e)
-}
