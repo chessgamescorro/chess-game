@@ -24,11 +24,14 @@ function createBoard() {
       square.classList.add((row + column) % 2 === 0 ? 'beige' : 'brown')
       if (startPiece) {
         square.innerHTML = startPiece
-        square.querySelector('svg').classList.add(index < 16 ? 'black' : 'white')
+        if (index < 16) {
+          square.querySelector('svg').classList.add('black')
+        } else if (index >= 48) {
+          piece.classList.add('white')
+        }
       }
 
       gameBoard.append(square)
     })
  }
 createBoard()
-

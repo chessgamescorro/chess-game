@@ -34,10 +34,8 @@
     fill: black;
 }
 
-.black {
-    fill: rgb(28, 28, 28)
-}
-
-.white {
-    fill: rgb(255, 255, 255)
+.piece.white svg {
+    fill: white;
+    stroke: #333;
+    stroke-width: 12px;
 }
