@@ -26,12 +26,13 @@ function createBoard() {
         square.innerHTML = startPiece
       }
 
-      if (i <= 15) {
-        square.firstChild.firstChild.classList.add('black')
-      }
-
-      if (i <= 48) {
-        square.firstChild.firstChild.classList.add('white')
+      if (startPiece) {
+        const piece = square.querySelector('.piece')
+        if (index < 16) {
+          piece.classList.add('black')
+        } else if (index >= 48) {
+          piece.classList.add('white')
+        }
       }
 
       gameBoard.append(square)
