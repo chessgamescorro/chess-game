@@ -51,3 +51,46 @@ function createBoard() {
 // Render the initial chess position when the script loads.
 createBoard()
 
+
+// Zoek de knop op
+const changeButton = document.querySelector('#submitButton')
+
+// Houd bij welke kleurencombinatie actief is
+let boardColors = 0
+
+// Verander de bordkleuren wanneer je op de knop klikt
+changeButton.addEventListener('click', () => {
+    const beigeSquares = document.querySelectorAll('.beige')
+    const brownSquares = document.querySelectorAll('.brown')
+
+    boardColors++
+
+    if (boardColors % 3 === 1) {
+        // Nieuwe kleuren
+        beigeSquares.forEach(square => {
+            square.style.backgroundColor = '#f0d9b5'
+        })
+
+        brownSquares.forEach(square => {
+            square.style.backgroundColor = '#b58863'
+        })
+    } else if (boardColors % 3 === 2) {
+        // Originele kleuren
+        beigeSquares.forEach(square => {
+            square.style.backgroundColor = '#f0d9b5'
+        })
+
+        brownSquares.forEach(square => {
+            square.style.backgroundColor = '#eb07b9'
+        })
+    } else {
+              // Originele kleuren
+        beigeSquares.forEach(square => {
+            square.style.backgroundColor = 'rgb(238, 238, 210)'
+        })
+
+        brownSquares.forEach(square => {
+            square.style.backgroundColor = 'rgb(118, 150, 86)'
+        })
+    }
+});
