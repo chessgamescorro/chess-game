@@ -58,8 +58,32 @@
 
 
 .square.selected {
-    outline: 3px solid purple;
+    outline: 3px solid black;
     outline-offset: -3px;
     box-sizing: border-box;
     z-index: 1;
+}
+
+/* De schaakstukken */
+.piece {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* De SVG-afbeelding */
+.piece svg {
+    width: 90%;
+    height: 90%;
+    overflow: visible;
+}
+
+/* Effect wanneer je over een stuk beweegt */
+.piece:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.4));
 }
