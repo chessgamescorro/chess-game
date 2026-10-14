@@ -1,3 +1,5 @@
+
+
 // Cache the page elements used to display the board and game status.
 const gameBoard = document.querySelector('#gameboard')
 const playerDisplay = document.querySelector('#player')
@@ -28,6 +30,20 @@ function createBoard() {
       const column = index % width
       square.classList.add((row + column) % 2 === 0 ? 'beige' : 'brown')
 
+      square.dataset.row = row
+      square.dataset.column = column
+      square.dataset.coordinates = `abcdefgh`[column] + (8 - row)
+
+      const leftColumn = square.dataset.column
+      const bottomRow = square.dataset.row
+      square.classList.add('row')
+      square.classList.add('column')
+      square.dataset.row = row
+      square.dataset.column = column
+      square.dataset.file = `abcdefgh`[column]
+      square.dataset.rank = 8 - row
+
+
       // Add the piece markup and assign its side based on its starting rank.
       if (startPiece) {
         square.innerHTML = startPiece
@@ -45,8 +61,20 @@ function createBoard() {
       // Attach the completed square to the board.
       gameBoard.append(square)
     })
- }
+}
+
+
 
 // Render the initial chess position when the script loads.
 createBoard()
 
+
+const allSquares = gameBoard.querySelectorAll('.square')
+
+allSquares.forEach(square => {
+  square.addEventListener('dragstart', dragStart)
+})
+
+function dragStart(e) {
+  console.log(e.target.parentNode)
+}
