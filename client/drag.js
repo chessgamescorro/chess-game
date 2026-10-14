@@ -18,9 +18,12 @@ gameBoard.addEventListener('click', e => {
 
         selected = piece;
 
-        // Maak het huidige vakje paars
+        // Highlight het huidige vakje
         selected.parentElement.classList.add('selected');
 
+
+    
+        
     } else {
         // Bewaar het oude vakje voordat de pion verplaatst wordt
         const oldSquare = selected.parentElement;
@@ -33,7 +36,15 @@ gameBoard.addEventListener('click', e => {
         tray.append(target);
         const capturedKing = tray.querySelector('[data-piece="king"]');
         if (capturedKing) {
-          kingState.textContent = `King captured by ${currentPlayer}, ${currentPlayer} wins!`;
+          kingState.textContent = `King captured, ${currentPlayer} wins!`;
+            createBoard()
+            rotateBoard()
+            selected = null;
+            infoDisplay.textContent = '';
+            kingState.textContent = '';
+            document.querySelectorAll('.captured').forEach(tray => {
+            tray.innerHTML = '';
+    })
         }
       }
             // Verplaats de pion

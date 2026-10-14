@@ -13,23 +13,38 @@
         <p>Gebouwd in HTML, CSS, JavaScript door Redouan, Mikolaj, Wiktoria, Grantas</p>
     </header>
 
-    <main>
-        <!-- JavaScript fills this container with the captured black pieces. -->
-        <div id="captured-black" class="captured"></div>
-        <!-- JavaScript fills this container with the 64 chessboard squares. -->
-        <div id="gameboard"></div>
-        <!-- JavaScript fills this container with the captured white pieces. -->
-        <div id="captured-white" class="captured"></div>
+    <main class="game-layout">
+        <section class="board-area" aria-label="Chess board and captured pieces">
+            <!-- JavaScript fills these containers with captured pieces. -->
+            <div id="captured-black" class="captured" aria-label="Captured black pieces"></div>
+            <div class="board-frame">
+                <div id="gameboard" aria-label="Chess board"></div>
+                <div class="file-coordinates" aria-hidden="true">
+                    <span>a</span><span>b</span><span>c</span><span>d</span>
+                    <span>e</span><span>f</span><span>g</span><span>h</span>
+                </div>
+                <div class="rank-coordinates" aria-hidden="true">
+                    <span>8</span><span>7</span><span>6</span><span>5</span>
+                    <span>4</span><span>3</span><span>2</span><span>1</span>
+                </div>
+            </div>
+
+            <div id="captured-white" class="captured" aria-label="Captured white pieces"></div>
+        </section>
+
+        <aside class="game-panel" aria-label="Game controls">
+            <div class="turn-indicator">
+                <p>It's <span id="player"></span>'s turn</p>
+            </div>
+            <p id="info-display" class="game-message" aria-live="polite"></p>
+            <p id="King-display" class="game-message" aria-live="polite"></p>
+
+            <div class="game-actions">
+                <button id="resetButton" class="reset">New game</button>
+                <button id="changeboard" class="secondary-button">Change board</button>
+            </div>
+        </aside>
     </main>
-
-    <footer>
-        <p>It's <span id="player"></span>'s turn</p>
-        <p id="info-display"></p>
-        <p id="King-display"></p>
-
-        <button id="changeboard">Change Board</button>
-        <button id="resetButton">Reset</button>
-    </footer>
 
     <script src="piece.js"></script>
     <script src="main.js"></script>

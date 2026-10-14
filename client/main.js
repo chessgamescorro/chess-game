@@ -2,6 +2,7 @@
 
 // Cache the page elements used to display the board and game status.
 const gameBoard = document.querySelector('#gameboard')
+const boardFrame = document.querySelector('.board-frame')
 const playerDisplay = document.querySelector('#player')
 const infoDisplay = document.querySelector('#info-display')
 
@@ -125,12 +126,10 @@ changeButton.addEventListener('click', () => {
     }
 })
 
-    function rotateBoard(){
-
-        gameBoard.classList.toggle('rotated')
-
-
-    }
+        function rotateBoard(){
+            gameBoard.classList.toggle('rotated')
+            boardFrame.classList.toggle('rotated')
+        }
 
 // Reset het hele schaakbord
 const resetButton = document.querySelector('#resetButton');
@@ -144,6 +143,7 @@ resetButton.addEventListener('click', () => {
     playerDisplay.textContent = currentPlayer;
     selected = null;
     gameBoard.classList.remove('rotated');
+    boardFrame.classList.remove('rotated');
     document.querySelectorAll('.captured').forEach(tray => {
         tray.innerHTML = '';
     });
