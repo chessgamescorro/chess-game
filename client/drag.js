@@ -1,8 +1,7 @@
 // Set the starting player to White
-let currentPlayer = "White";
+currentPlayer = "White";
 playerDisplay.textContent = currentPlayer;
-
-let selected = null;
+selected = null;
 
 gameBoard.addEventListener('click', e => {
     const square = e.target.closest('.square');

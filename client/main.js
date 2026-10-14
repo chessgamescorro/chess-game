@@ -8,6 +8,10 @@ const infoDisplay = document.querySelector('#info-display')
 // The board has eight squares in each row and column.
 const width = 8
 
+// Turn Status
+let currentPlayer = "White";
+let selected = null;
+
 // Store the starting position row by row, using empty strings for empty squares.
 const startPieces = [
     rook, knight, bishop, queen, king, bishop, knight, rook,
@@ -67,15 +71,6 @@ function createBoard() {
 createBoard()
 
 
-const allSquares = gameBoard.querySelectorAll('.square')
-
-allSquares.forEach(square => {
-  square.addEventListener('dragstart', dragStart)
-})
-
-function dragStart(e) {
-  console.log(e.target.parentNode)
-}
 // Zoek de knop op
 const changeButton = document.querySelector('#submitButton')
 
@@ -130,18 +125,21 @@ changeButton.addEventListener('click', () => {
     }
 })
 
-
-const resetButton = document.querySelector('#resetButton')
+// Reset het hele schaakbord
+const resetButton = document.querySelector('#resetButton');
 
 resetButton.addEventListener('click', () => {
-    // Reset de kleurencyclus
-    boardColors = 0
+    // Reset de kleuren
+    boardColors = 0;
 
-    // Maak het bord opnieuw met de originele stukken
-    createBoard()
-    // Zet de beurt terug naar wit
-    playerDisplay.textContent = 'white'
+    // Reset de speler en selectie
+    currentPlayer = "White";
+    playerDisplay.textContent = currentPlayer;
+    selected = null;
 
-    // Wis eventuele berichten
-    infoDisplay.textContent = ''
-})
+    // Maak het bord opnieuw met alle originele stukken
+    createBoard();
+
+    // Wis berichten
+    infoDisplay.textContent = '';
+});
