@@ -72,7 +72,7 @@ createBoard()
 
 
 // Zoek de knop op
-const changeButton = document.querySelector('#submitButton')
+const changeButton = document.querySelector('#changeboard')
 
 // Houd bij welke kleurencombinatie actief is
 let boardColors = 0
