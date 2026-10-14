@@ -35,14 +35,8 @@ function createBoard() {
       square.dataset.row = row
       square.dataset.column = column
       square.dataset.coordinates = `abcdefgh`[column] + (8 - row)
-
-      // Voegt de dataset-attributen toe om de positie en kleur te identificeren.
-      const leftColumn = square.dataset.column
-      const bottomRow = square.dataset.row
       square.classList.add('row')
       square.classList.add('column')
-      square.dataset.row = row
-      square.dataset.column = column
       square.dataset.file = `abcdefgh`[column]
       square.dataset.rank = 8 - row
 
