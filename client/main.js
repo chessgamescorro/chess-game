@@ -125,6 +125,13 @@ changeButton.addEventListener('click', () => {
     }
 })
 
+    function rotateBoard(){
+        
+        gameBoard.classList.toggle('rotated')
+ 
+
+    }
+
 // Reset het hele schaakbord
 const resetButton = document.querySelector('#resetButton');
 
@@ -142,4 +149,6 @@ resetButton.addEventListener('click', () => {
 
     // Wis berichten
     infoDisplay.textContent = '';
+
+
 });

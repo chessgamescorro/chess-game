@@ -3,6 +3,8 @@ currentPlayer = "White";
 playerDisplay.textContent = currentPlayer;
 selected = null;
 
+
+
 gameBoard.addEventListener('click', e => {
     const square = e.target.closest('.square');
     const piece = e.target.closest('.piece');
@@ -25,6 +27,8 @@ gameBoard.addEventListener('click', e => {
 
         if (target !== selected) {
             target?.remove();
+
+
         }
 
         // Verplaats de pion
@@ -33,10 +37,11 @@ gameBoard.addEventListener('click', e => {
         // Switch to the next player
         currentPlayer = currentPlayer === "White" ? "Black" : "White";
         playerDisplay.textContent = currentPlayer;
+        rotateBoard()
 
         // Verwijder de paarse rand van het oude vakje
         oldSquare.classList.remove('selected');
-        
+
         selected = null;
     }
 });

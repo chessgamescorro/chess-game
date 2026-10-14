@@ -37,6 +37,19 @@ footer {
     grid-template-rows: repeat(8, 80px);
 }
 
+#gameboard.rotated {
+    transform: rotate(180deg);
+}
+
+#gameboard.rotated .piece,
+#gameboard.rotated .square::before,
+#gameboard.rotated .square::after {
+    transform: rotate(180deg);
+}
+
+#gameboard.rotated .piece:hover {
+    transform: rotate(180deg) scale(1.1);
+}
 
 /* Center each piece within its board square. */
 .square {
@@ -46,6 +59,10 @@ footer {
     align-items: center;
     justify-content: center;
     position: relative;
+}
+.square.rotated {
+    transform: rotate(180deg);
+
 }
 
 /* Apply alternating colors to the two square classes. */
@@ -123,14 +140,12 @@ footer {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 /* De SVG-afbeelding */
 .piece svg {
     width: 90%;
     height: 90%;
-    overflow: visible;
 }
 
 /* Effect wanneer je over een stuk beweegt */
