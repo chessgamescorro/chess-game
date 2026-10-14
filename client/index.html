@@ -7,18 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Schaakspel Projectweek 1 2026</h1>
+    <header>
+        <h1>Schaakspel Projectweek 1 2026</h1>
 
-    <p>Gebouwd in HTML, CSS, JavaScript door Redouan, Mikolaj, Wiktoria, Grantas</p>
+        <p>Gebouwd in HTML, CSS, JavaScript door Redouan, Mikolaj, Wiktoria, Grantas</p>
+    </header>
 
-    <!-- JavaScript fills this container with the 64 chessboard squares. (Not worked out yet) -->
-    <div id="gameboard"></div>
-    <!-- Display the current player and any game information. -->
-    <p>It's <span id="player"></span>'s turn</p>
-    <p id="info-display"></p>
+    <main>
+        <!-- JavaScript fills this container with the 64 chessboard squares. -->
+        <div id="gameboard"></div>
+    </main>
 
-    <button id="submitButton">Change Board</button>
-    <button id="resetButton">Reset</button>
+    <footer>
+        <p>It's <span id="player"></span>'s turn</p>
+        <p id="info-display"></p>
+
+        <button id="changeboard">Change Board</button>
+        <button id="resetButton">Reset</button>
+    </footer>
 
     <script src="piece.js"></script>
     <script src="main.js"></script>

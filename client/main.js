@@ -43,7 +43,7 @@ function createBoard() {
       square.classList.add('row')
       square.classList.add('column')
       square.dataset.file = `abcdefgh`[column]
-      square.dataset.rank = 8 - row
+      square.dataset.rank = 16 - row
 
 
       // Add the piece markup and assign its side based on its starting rank.
@@ -72,7 +72,7 @@ createBoard()
 
 
 // Zoek de knop op
-const changeButton = document.querySelector('#submitButton')
+const changeButton = document.querySelector('#changeboard')
 
 // Houd bij welke kleurencombinatie actief is
 let boardColors = 0

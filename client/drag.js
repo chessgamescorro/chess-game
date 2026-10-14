@@ -36,7 +36,7 @@ gameBoard.addEventListener('click', e => {
 
         // Verwijder de paarse rand van het oude vakje
         oldSquare.classList.remove('selected');
-
+        
         selected = null;
     }
 });
