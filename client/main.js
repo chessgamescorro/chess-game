@@ -43,7 +43,7 @@ function createBoard() {
       square.classList.add('row')
       square.classList.add('column')
       square.dataset.file = `abcdefgh`[column]
-      square.dataset.rank = 16 - row
+      square.dataset.rank = 8 - row
 
 
       // Add the piece markup and assign its side based on its starting rank.
@@ -112,7 +112,7 @@ changeButton.addEventListener('click', () => {
 
         brownSquares.forEach(square => {
             square.style.backgroundColor = '#00b7ff'
-        })   
+        })
     } else {
         // Terug naar de originele kleuren
         beigeSquares.forEach(square => {
@@ -126,9 +126,9 @@ changeButton.addEventListener('click', () => {
 })
 
     function rotateBoard(){
-        
+
         gameBoard.classList.toggle('rotated')
- 
+
 
     }
 
@@ -139,10 +139,11 @@ resetButton.addEventListener('click', () => {
     // Reset de kleuren
     boardColors = 0;
 
-    // Reset de speler en selectie
+    // Reset de speler, selectie en rotatie
     currentPlayer = "White";
     playerDisplay.textContent = currentPlayer;
     selected = null;
+    gameBoard.classList.remove('rotated');
 
     // Maak het bord opnieuw met alle originele stukken
     createBoard();
