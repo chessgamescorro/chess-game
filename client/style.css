@@ -71,7 +71,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: grab;
+    cursor: pointer;
     transition: transform 0.2s ease, filter 0.2s ease;
 }
 

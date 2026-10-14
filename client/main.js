@@ -63,10 +63,11 @@ changeButton.addEventListener('click', () => {
     const beigeSquares = document.querySelectorAll('.beige')
     const brownSquares = document.querySelectorAll('.brown')
 
+    // Verhoog het nummer bij elke klik
     boardColors++
 
     if (boardColors % 3 === 1) {
-        // Nieuwe kleuren
+        // Kleurencombinatie 1
         beigeSquares.forEach(square => {
             square.style.backgroundColor = '#f0d9b5'
         })
@@ -74,17 +75,19 @@ changeButton.addEventListener('click', () => {
         brownSquares.forEach(square => {
             square.style.backgroundColor = '#b58863'
         })
+
     } else if (boardColors % 3 === 2) {
-        // Originele kleuren
+        // Kleurencombinatie 2
         beigeSquares.forEach(square => {
             square.style.backgroundColor = '#f0d9b5'
         })
 
         brownSquares.forEach(square => {
-            square.style.backgroundColor = '#eb07b9'
+            square.style.backgroundColor = '#eb83d4'
         })
+
     } else {
-              // Originele kleuren
+        // Terug naar de originele kleuren
         beigeSquares.forEach(square => {
             square.style.backgroundColor = 'rgb(238, 238, 210)'
         })
@@ -93,4 +96,4 @@ changeButton.addEventListener('click', () => {
             square.style.backgroundColor = 'rgb(118, 150, 86)'
         })
     }
-});
+})
