@@ -95,7 +95,7 @@ changeButton.addEventListener('click', () => {
     // Verhoog het nummer bij elke klik
     boardColors++
 
-    if (boardColors % 3 === 1) {
+    if (boardColors % 4 === 1) {
         // Kleurencombinatie 1
         beigeSquares.forEach(square => {
             square.style.backgroundColor = '#f0d9b5'
@@ -105,7 +105,7 @@ changeButton.addEventListener('click', () => {
             square.style.backgroundColor = '#b58863'
         })
 
-    } else if (boardColors % 3 === 2) {
+    } else if (boardColors % 4 === 2) {
         // Kleurencombinatie 2
         beigeSquares.forEach(square => {
             square.style.backgroundColor = '#f0d9b5'
@@ -114,7 +114,15 @@ changeButton.addEventListener('click', () => {
         brownSquares.forEach(square => {
             square.style.backgroundColor = '#eb83d4'
         })
+    } else if (boardColors % 4 === 3) {
+        // Kleurencombinatie 3
+        beigeSquares.forEach(square => {
+            square.style.backgroundColor = 'rgb(238, 238, 210)'
+        })
 
+        brownSquares.forEach(square => {
+            square.style.backgroundColor = '#00b7ff'
+        })   
     } else {
         // Terug naar de originele kleuren
         beigeSquares.forEach(square => {
