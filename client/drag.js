@@ -1,3 +1,7 @@
+// Set the starting player to White
+let currentPlayer = "White";
+playerDisplay.textContent = currentPlayer;
+
 let selected = null;
 
 gameBoard.addEventListener('click', e => {
@@ -26,6 +30,10 @@ gameBoard.addEventListener('click', e => {
 
         // Verplaats de pion
         square.append(selected);
+
+        // Switch to the next player
+        currentPlayer = currentPlayer === "White" ? "Black" : "White";
+        playerDisplay.textContent = currentPlayer;
 
         // Verwijder de paarse rand van het oude vakje
         oldSquare.classList.remove('selected');

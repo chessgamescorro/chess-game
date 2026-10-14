@@ -1,3 +1,4 @@
+
 // Cache the page elements used to display the board and game status.
 const gameBoard = document.querySelector('#gameboard')
 const playerDisplay = document.querySelector('#player')
