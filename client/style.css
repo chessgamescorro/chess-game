@@ -1,17 +1,46 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 32px;
+    box-sizing: border-box;
+    background-color: #302E2B;
+    color: white;
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+}
+
+header {
+    justify-self: center;
+    text-align: center;
+    align-self: start;
+}
+
+main {
+    display: grid;
+    place-items: center;
+}
+
+footer {
+    justify-self: center;
+    text-align: center;
+    align-self: end;
+}
+
 /* Lay out the eight-by-eight board with fixed-size squares. */
 #gameboard {
-    width: 320px;
-    height: 320px;
+    width: 640px;
+    height: 640px;
     background-color: black;
     display: grid;
-    grid-template-columns: repeat(8, 40px);
-    grid-template-rows: repeat(8, 40px);
+    grid-template-columns: repeat(8, 80px);
+    grid-template-rows: repeat(8, 80px);
 }
+
 
 /* Center each piece within its board square. */
 .square {
-    height: 40px;
-    width: 40px;
+    height: 80px;
+    width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -106,10 +135,5 @@
 /* Effect wanneer je over een stuk beweegt */
 .piece:hover {
     transform: scale(1.1);
-    filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.4));
-}
-
-body {
-    background-color: black;
-    color: white;
+    filter: drop-shadow(2px 3px 3px rgb(0, 0, 0));
 }
