@@ -30,10 +30,13 @@ function createBoard() {
       const column = index % width
       square.classList.add((row + column) % 2 === 0 ? 'beige' : 'brown')
 
+
+      // Voegt de dataset-attributen toe om de positie en kleur te identificeren.
       square.dataset.row = row
       square.dataset.column = column
       square.dataset.coordinates = `abcdefgh`[column] + (8 - row)
 
+      // Voegt de dataset-attributen toe om de positie en kleur te identificeren.
       const leftColumn = square.dataset.column
       const bottomRow = square.dataset.row
       square.classList.add('row')
