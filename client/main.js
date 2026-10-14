@@ -78,3 +78,48 @@ allSquares.forEach(square => {
 function dragStart(e) {
   console.log(e.target.parentNode)
 }
+// Zoek de knop op
+const changeButton = document.querySelector('#submitButton')
+
+// Houd bij welke kleurencombinatie actief is
+let boardColors = 0
+
+// Verander de bordkleuren wanneer je op de knop klikt
+changeButton.addEventListener('click', () => {
+    const beigeSquares = document.querySelectorAll('.beige')
+    const brownSquares = document.querySelectorAll('.brown')
+
+    // Verhoog het nummer bij elke klik
+    boardColors++
+
+    if (boardColors % 3 === 1) {
+        // Kleurencombinatie 1
+        beigeSquares.forEach(square => {
+            square.style.backgroundColor = '#f0d9b5'
+        })
+
+        brownSquares.forEach(square => {
+            square.style.backgroundColor = '#b58863'
+        })
+
+    } else if (boardColors % 3 === 2) {
+        // Kleurencombinatie 2
+        beigeSquares.forEach(square => {
+            square.style.backgroundColor = '#f0d9b5'
+        })
+
+        brownSquares.forEach(square => {
+            square.style.backgroundColor = '#eb83d4'
+        })
+
+    } else {
+        // Terug naar de originele kleuren
+        beigeSquares.forEach(square => {
+            square.style.backgroundColor = 'rgb(238, 238, 210)'
+        })
+
+        brownSquares.forEach(square => {
+            square.style.backgroundColor = 'rgb(118, 150, 86)'
+        })
+    }
+})
