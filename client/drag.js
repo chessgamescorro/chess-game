@@ -26,19 +26,19 @@ gameBoard.addEventListener('click', e => {
         const oldSquare = selected.parentElement;
         const target = square.querySelector('.piece');
 
-        if (target && target !== selected) {
+      if (target && target !== selected) {
 
-            const tray = document.querySelector(`#captured-${currentPlayer.toLowerCase()}`);
+        const tray = document.querySelector(`#captured-${currentPlayer.toLowerCase()}`);
 
-            tray.append(target);
-
-            const capturedKing = tray.querySelector('[data-piece="king"]');
-            if (capturedKing) {
-                kingState.textContent = `King captured by ${currentPlayer}, ${currentPlayer} wins!`;
-            }
-
+        tray.append(target);
+        const capturedKing = tray.querySelector('[data-piece="king"]');
+        if (capturedKing) {
+          kingState.textContent = `King captured by ${currentPlayer}, ${currentPlayer} wins!`;
+        }
+      }
             // Verplaats de pion
             square.append(selected);
+
 
             // Switch to the next player
             currentPlayer = currentPlayer === "White" ? "Black" : "White";
@@ -49,7 +49,7 @@ gameBoard.addEventListener('click', e => {
             oldSquare.classList.remove('selected');
 
             selected = null;
-        }
+
     }
 
 
