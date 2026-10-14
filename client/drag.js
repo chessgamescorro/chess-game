@@ -2,6 +2,7 @@
 currentPlayer = "White";
 playerDisplay.textContent = currentPlayer;
 selected = null;
+kingState = document.querySelector('#King-display');
 
 
 
@@ -27,22 +28,29 @@ gameBoard.addEventListener('click', e => {
 
         if (target && target !== selected) {
 
-          const tray = document.querySelector(`#captured-${currentPlayer.toLowerCase()}`
-          )
-          tray.append(target);
+            const tray = document.querySelector(`#captured-${currentPlayer.toLowerCase()}`);
+
+            tray.append(target);
+
+            const capturedKing = tray.querySelector('[data-piece="king"]');
+            if (capturedKing) {
+                kingState.textContent = `King captured by ${currentPlayer}, ${currentPlayer} wins!`;
+            }
+
+            // Verplaats de pion
+            square.append(selected);
+
+            // Switch to the next player
+            currentPlayer = currentPlayer === "White" ? "Black" : "White";
+            playerDisplay.textContent = currentPlayer;
+            rotateBoard()
+
+            // Verwijder de paarse rand van het oude vakje
+            oldSquare.classList.remove('selected');
+
+            selected = null;
         }
-
-        // Verplaats de pion
-        square.append(selected);
-
-        // Switch to the next player
-        currentPlayer = currentPlayer === "White" ? "Black" : "White";
-        playerDisplay.textContent = currentPlayer;
-        rotateBoard()
-
-        // Verwijder de paarse rand van het oude vakje
-        oldSquare.classList.remove('selected');
-
-        selected = null;
     }
+
+
 });

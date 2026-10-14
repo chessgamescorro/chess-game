@@ -152,7 +152,6 @@ resetButton.addEventListener('click', () => {
     createBoard();
 
     // Wis berichten
-    infoDisplay.textContent = '';
-
-
+  infoDisplay.textContent = '';
+  kingState.textContent = '';
 });
