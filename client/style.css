@@ -170,3 +170,17 @@ body {
     background-color: #302E2B;
     color: white;
 }
+
+
+.captured {
+    min-height: 40px;
+    display: flex;
+    gap: -4px;
+}
+
+.captured .piece {
+    width: 48px;
+    height: 48px;
+    gap: -4px;
+
+}

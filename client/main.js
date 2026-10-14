@@ -144,6 +144,9 @@ resetButton.addEventListener('click', () => {
     playerDisplay.textContent = currentPlayer;
     selected = null;
     gameBoard.classList.remove('rotated');
+    document.querySelectorAll('.captured').forEach(tray => {
+        tray.innerHTML = '';
+    });
 
     // Maak het bord opnieuw met alle originele stukken
     createBoard();

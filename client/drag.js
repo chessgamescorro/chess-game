@@ -25,10 +25,11 @@ gameBoard.addEventListener('click', e => {
         const oldSquare = selected.parentElement;
         const target = square.querySelector('.piece');
 
-        if (target !== selected) {
-            target?.remove();
+        if (target && target !== selected) {
 
-
+          const tray = document.querySelector(`#captured-${currentPlayer.toLowerCase()}`
+          )
+          tray.append(target);
         }
 
         // Verplaats de pion
