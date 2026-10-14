@@ -23,6 +23,7 @@ const startPieces = [
 // Create all board squares and place the starting pieces on them.
 function createBoard() {
     // Use each array index to determine the square's position and color.
+    gameBoard.innerHTML = ''
     startPieces.forEach((startPiece, index) => {
       const square = document.createElement('div')
       square.classList.add('square')
@@ -127,4 +128,20 @@ changeButton.addEventListener('click', () => {
             square.style.backgroundColor = 'rgb(118, 150, 86)'
         })
     }
+})
+
+
+const resetButton = document.querySelector('#resetButton')
+
+resetButton.addEventListener('click', () => {
+    // Reset de kleurencyclus
+    boardColors = 0
+
+    // Maak het bord opnieuw met de originele stukken
+    createBoard()
+    // Zet de beurt terug naar wit
+    playerDisplay.textContent = 'white'
+
+    // Wis eventuele berichten
+    infoDisplay.textContent = ''
 })
