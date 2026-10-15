@@ -278,6 +278,23 @@ button:active {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    touch-action: none;
+    user-select: none;
+}
+
+.piece.is-dragging {
+    opacity: 0.3;
+}
+
+.piece.drag-preview {
+    position: fixed;
+    z-index: 10;
+    pointer-events: none;
+    cursor: grabbing;
+}
+
+.piece.drag-preview-rotated {
+    transform: rotate(180deg);
 }
 
 /* De SVG-afbeelding */
@@ -409,4 +426,3 @@ body {
     position: relative;
     z-index: 1;
 }
-

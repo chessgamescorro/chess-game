@@ -50,7 +50,7 @@ function createBoard() {
       // Add the piece markup and assign its side based on its starting rank.
       if (startPiece) {
         square.innerHTML = startPiece
-        square.firstChild?.setAttribute('draggable', true)
+        square.firstChild?.setAttribute('draggable', false)
         square.querySelector('svg').classList.add(index < 16 ? 'black' : 'white')
       }
 
