@@ -1,16 +1,17 @@
-/*function getSquare(r, c) {
-    return document.querySelectorAll(`.square[data-row="${r}"][data-col="${c}"]`);
-}*/
+function infoSquare(column, row) {
 
-/* function infoSquare(row, column) {
-    return document.querySelector(`.square[data-row="${row}"][data-col="${column}"]`);
-} */
+  const pieceName = document.querySelector(`.square[data-rank="${row}"][data-file="${column}"] .piece`
+  );
 
-
-function infoSquare(row, column) {
-
-    return document.querySelector(`.square[data-rank="${row}"][data-file="${column}"] .piece`);
+  return pieceName ? pieceName.dataset.piece : null;
 
 }
 
+addEventListener('click', (e) => {
+    const square = e.target.closest('.square');
+    if (!square) return;
 
+  const name = infoSquare(square.dataset.file, square.dataset.rank);
+  console.log(`"${name}" found`);
+
+});
