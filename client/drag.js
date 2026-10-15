@@ -21,7 +21,7 @@ gameBoard.addEventListener('click', e => {
         // Highlight het huidige vakje
         selected.parentElement.classList.add('selected');
 
-
+        
     
         
     } else {
