@@ -381,3 +381,32 @@ body {
 .scoreboard {
     margin-top: 150px;
 }
+
+.piece {
+    transition: transform 0.2s ease;
+}
+
+
+
+#gameboard .piece.moving {
+    animation: chessMove 0.6s ease-in-out;
+    transform-origin: center;
+}
+
+@keyframes chessMove {
+    0% {
+        scale: 1;
+    }
+    50% {
+        scale: 1.5;
+    }
+    100% {
+        scale: 1;
+    }
+}
+
+.piece {
+    position: relative;
+    z-index: 1;
+}
+

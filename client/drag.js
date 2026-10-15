@@ -39,7 +39,7 @@ const capturedKing = target.dataset.piece === "king";
 
 tray.append(target);
 if (capturedKing) {
-    // Geeft aan wie heeft gewonnen aan scorboard
+    // Geeft aan wie heeft gewonnen aan scorboardw
     updateScore(currentPlayer);
     showWinner(currentPlayer);
 
@@ -68,8 +68,23 @@ if (capturedKing) {
 }
     }
             // Verplaats de pion
-            square.append(selected);
+const piece = selected;
+const oldX = piece.getBoundingClientRect().left;
+const oldY = piece.getBoundingClientRect().top;
 
+square.append(piece);
+
+const newX = piece.getBoundingClientRect().left;
+const newY = piece.getBoundingClientRect().top;
+piece.style.zIndex = "10";
+
+piece.animate([
+    { left: oldX - newX + 'px', top: oldY - newY + 'px' },
+    { left: '0px', top: '0px' }
+], {
+    duration: 300,
+    easing: 'ease-in-out'
+});
 
             // Switch to the next player
             currentPlayer = currentPlayer === "White" ? "Black" : "White";
