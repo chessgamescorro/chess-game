@@ -127,9 +127,13 @@ changeButton.addEventListener('click', () => {
 })
 
         function rotateBoard(){
+            
             gameBoard.classList.toggle('rotated')
             boardFrame.classList.toggle('rotated')
         }
+
+const rotateButton = document.querySelector('#rotateBoard')
+rotateButton.addEventListener('click', rotateBoard)
 
 // Reset het hele schaakbord
 const resetButton = document.querySelector('#resetButton');

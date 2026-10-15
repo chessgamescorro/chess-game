@@ -74,7 +74,6 @@ if (capturedKing) {
             // Switch to the next player
             currentPlayer = currentPlayer === "White" ? "Black" : "White";
             playerDisplay.textContent = currentPlayer;
-            rotateBoard()
 
             // Verwijder de paarse rand van het oude vakje
             oldSquare.classList.remove('selected');
