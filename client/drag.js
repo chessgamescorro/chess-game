@@ -1,3 +1,5 @@
+const moveSound = new Audio('woosh.mp3');
+
 // Set the starting player to White
 currentPlayer = "White";
 playerDisplay.textContent = currentPlayer;
@@ -86,9 +88,16 @@ piece.animate([
     easing: 'ease-in-out'
 });
 
+// Play move sound
+moveSound.currentTime = 0;
+moveSound.play();
+
+
+
             // Switch to the next player
             currentPlayer = currentPlayer === "White" ? "Black" : "White";
             playerDisplay.textContent = currentPlayer;
+
 
             // Verwijder de paarse rand van het oude vakje
             oldSquare.classList.remove('selected');
