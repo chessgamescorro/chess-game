@@ -1,5 +1,7 @@
 // Select a piece or move the selected piece when the player clicks the board.
     gameBoard.addEventListener('click', event => {
+    if (gameOver) return;
+
     // A drag already handled this interaction, so ignore its follow-up click.
     if (suppressClick) {
       suppressClick = false;
@@ -14,7 +16,7 @@
 
     // If nothing is selected yet, select the clicked piece.
     if (!selected) {
-        if (!piece) return;
+        if (!piece || !isCurrentPlayerPiece(piece)) return;
 
         selected = piece;
       square.classList.add('selected');

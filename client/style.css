@@ -347,10 +347,6 @@ button:active {
     cursor: grabbing;
 }
 
-.piece.drag-preview-rotated {
-    transform: rotate(180deg);
-}
-
 /* De SVG-afbeelding */
 .piece svg {
     width: 90%;
