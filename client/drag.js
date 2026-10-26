@@ -106,7 +106,11 @@ function movePieceToSquare(piece, square) {
     }
 
     // Put the moving piece on the destination square.
-    square.append(piece);
+  square.append(piece);
+  // Remove the move highlights after the piece moves.
+  gameBoard.querySelectorAll('.highlight').forEach(square => {
+      square.classList.remove('highlight');
+  });
     playMoveSound();
 
     // Switch whose turn it is and update the turn display.
@@ -250,7 +254,60 @@ gameBoard.addEventListener('click', event => {
         if (!piece) return;
 
         selected = piece;
-        square.classList.add('selected');
+      square.classList.add('selected');
+
+      // Highlight the king's possible moves.
+      if (piece.dataset.piece === 'king') {
+          const fromSquare = piece.closest('.square');
+          const kingIsWhite = piece.querySelector('svg').classList.contains('white');
+          const allSquares = gameBoard.querySelectorAll('.square');
+
+          allSquares.forEach(targetSquare => {
+              const pieceThere = targetSquare.querySelector('.piece');
+
+              // Don't show a square occupied by a piece of the king's color.
+              const hasFriendlyPiece = pieceThere &&
+                  pieceThere.querySelector('svg').classList.contains('white') === kingIsWhite;
+
+              // Highlight nearby squares that aren't occupied by a friendly piece.
+              if (!hasFriendlyPiece && isKingMoveAllowed(fromSquare, targetSquare)) {
+                  targetSquare.classList.add('highlight');
+              }
+          });
+      }
+
+      // Highlight the bishop's possible moves.
+      if (piece.dataset.piece === 'bishop') {
+          const fromSquare = piece.closest('.square');
+          const bishopIsWhite = piece.querySelector('svg').classList.contains('white');
+          const allSquares = gameBoard.querySelectorAll('.square');
+
+          allSquares.forEach(targetSquare => {
+              const pieceThere = targetSquare.querySelector('.piece');
+              const hasFriendlyPiece = pieceThere &&
+                  pieceThere.querySelector('svg').classList.contains('white') === bishopIsWhite;
+              if (!hasFriendlyPiece && isBishopMoveAllowed(fromSquare, targetSquare)) {
+                  targetSquare.classList.add('highlight');
+              }
+          });
+      }
+
+      // Highlight the rooks possible moves.
+      if (piece.dataset.piece === 'rook') {
+          const fromSquare = piece.closest('.square');
+          const rookIsWhite = piece.querySelector('svg').classList.contains('white');
+          const allSquares = gameBoard.querySelectorAll('.square');
+
+          allSquares.forEach(targetSquare => {
+              const pieceThere = targetSquare.querySelector('.piece');
+              const hasFriendlyPiece = pieceThere &&
+                  pieceThere.querySelector('svg').classList.contains('white') === rookIsWhite;
+              if (!hasFriendlyPiece && isRookMoveAllowed(fromSquare, targetSquare)) {
+                  targetSquare.classList.add('highlight');
+              }
+          });
+      }
+
         return;
     }
 
