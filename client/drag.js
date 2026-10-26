@@ -139,6 +139,11 @@ function movePieceToSquare(piece, square) {
     return true;
 }
 
+// Clear the move list when starting a new game.
+document.querySelector('#resetButton').addEventListener('click', () => {
+    moveHistory.innerHTML = '';
+});
+
 // End the current drag and remove its temporary visual effects.
 function clearDrag() {
     if (!activeDrag) return;
