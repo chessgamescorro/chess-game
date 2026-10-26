@@ -12,6 +12,8 @@ const width = 8
 // Turn Status
 let currentPlayer = "White";
 let selected = null;
+let gameOver = false;
+playerDisplay.textContent = currentPlayer;
 
 // Store the starting position row by row, using empty strings for empty squares.
 const startPieces = [
@@ -135,27 +137,28 @@ changeButton.addEventListener('click', () => {
 const rotateButton = document.querySelector('#rotateBoard')
 rotateButton.addEventListener('click', rotateBoard)
 
-// Reset het hele schaakbord
 const resetButton = document.querySelector('#resetButton');
 
-resetButton.addEventListener('click', () => {
-    // Reset de kleuren
+function resetGame() {
     boardColors = 0;
-
-    // Reset de speler, selectie en rotatie
-    currentPlayer = "White";
+    currentPlayer = 'White';
     playerDisplay.textContent = currentPlayer;
     selected = null;
+    gameOver = false;
     gameBoard.classList.remove('rotated');
     boardFrame.classList.remove('rotated');
     document.querySelectorAll('.captured').forEach(tray => {
         tray.innerHTML = '';
     });
-
-    // Maak het bord opnieuw met alle originele stukken
     createBoard();
+    document.querySelector('#move-history').innerHTML = '';
+    infoDisplay.textContent = '';
+    kingState.textContent = '';
+    document.querySelector('#win-dialog').close();
+}
 
-    // Wis berichten
-  infoDisplay.textContent = '';
-  kingState.textContent = '';
+resetButton.addEventListener('click', resetGame);
+document.querySelector('#new-game-button').addEventListener('click', resetGame);
+document.querySelector('#view-board-button').addEventListener('click', () => {
+    document.querySelector('#win-dialog').close();
 });

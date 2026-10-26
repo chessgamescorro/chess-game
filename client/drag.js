@@ -33,13 +33,19 @@ function recordMove(piece, fromSquare, toSquare) {
     moveHistory.scrollTop = moveHistory.scrollHeight;
 }
 
+function isCurrentPlayerPiece(piece) {
+    const isWhite = piece.querySelector('svg').classList.contains('white');
+    return (currentPlayer === 'White') === isWhite;
+}
+
 // Move a piece if the destination square is allowed.
 function movePieceToSquare(piece, square) {
     // Save the square the piece is currently on.
     const oldSquare = piece.parentElement;
 
     // Stop if the destination is missing, outside the board, or the same square.
-    if (!square || !gameBoard.contains(square) || square === oldSquare) return false;
+    if (gameOver || !square || !gameBoard.contains(square) || square === oldSquare) return false;
+    if (!isCurrentPlayerPiece(piece)) return false;
 
     // Only let the king move one square in any direction.
     if (piece.dataset.piece === 'king' && !isKingMoveAllowed(oldSquare, square)) {
@@ -102,23 +108,19 @@ function movePieceToSquare(piece, square) {
 
         tray.append(target);
 
-        // Capturing a king ends the game and starts a fresh board.
+        // Capturing a king ends the game and leaves the final position visible.
         if (capturedKing) {
+            square.append(piece);
+            gameBoard.querySelectorAll('.highlight').forEach(highlightedSquare => {
+                highlightedSquare.classList.remove('highlight');
+            });
+            gameOver = true;
             playMoveSound();
             updateScore(currentPlayer);
             showWinner(currentPlayer);
-
+            document.querySelector('#win-message').textContent = `${currentPlayer} wins!`;
+            document.querySelector('#win-dialog').showModal();
             selected = null;
-            currentPlayer = 'White';
-            playerDisplay.textContent = currentPlayer;
-
-            document.querySelectorAll('.captured').forEach(capturedTray => {
-                capturedTray.innerHTML = '';
-            });
-
-            createBoard();
-            gameBoard.classList.remove('rotated');
-            boardFrame.classList.remove('rotated');
             return true;
         }
     }
@@ -152,11 +154,19 @@ function clearDrag() {
 
 // Start tracking a drag when the player presses the left mouse button on a piece.
 gameBoard.addEventListener('pointerdown', event => {
+    if (gameOver) return;
+
     const piece = event.target.closest('.piece');
     const square = piece?.closest('.square');
 
     // Ignore clicks that did not start on a piece on this board.
-    if (!piece || !square || !gameBoard.contains(piece) || event.button !== 0) return;
+    if (
+        !piece ||
+        !square ||
+        !gameBoard.contains(piece) ||
+        event.button !== 0 ||
+        !isCurrentPlayerPiece(piece)
+    ) return;
 
     // Save the piece and pointer position so we can move its preview smoothly.
     activeDrag = {
@@ -255,6 +265,8 @@ document.addEventListener('pointercancel', event => {
 
 // Select a piece or move the selected piece when the player clicks the board.
 gameBoard.addEventListener('click', event => {
+    if (gameOver) return;
+
     // A drag already handled this interaction, so ignore its follow-up click.
     if (suppressClick) {
         suppressClick = false;
@@ -269,7 +281,7 @@ gameBoard.addEventListener('click', event => {
 
     // If nothing is selected yet, select the clicked piece.
     if (!selected) {
-        if (!piece) return;
+        if (!piece || !isCurrentPlayerPiece(piece)) return;
 
         selected = piece;
       square.classList.add('selected');
@@ -336,6 +348,13 @@ gameBoard.addEventListener('click', event => {
         return;
     }
 
+    if (piece && isCurrentPlayerPiece(piece)) {
+        selected.parentElement.classList.remove('selected');
+        selected = piece;
+        square.classList.add('selected');
+        return;
+    }
+
     // Try to move the selected piece to the clicked square.
     const movingPiece = selected;
     const oldSquare = movingPiece.parentElement;
@@ -344,8 +363,4 @@ gameBoard.addEventListener('click', event => {
     // Clear the old square's highlight and clear the selection.
     oldSquare.classList.remove('selected');
     selected = null;
-});
-
-document.querySelector('#resetButton').addEventListener('click', () => {
-    moveHistory.innerHTML = '';
 });
