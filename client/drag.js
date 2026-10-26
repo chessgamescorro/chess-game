@@ -1,5 +1,6 @@
 // Load the sound that plays after a successful move.
 const moveSound = new Audio('woosh.mp3');
+const moveHistory = document.querySelector('#move-history');
 
 // Store information about a piece while it is being dragged.
 let activeDrag = null;
@@ -15,6 +16,21 @@ function playMoveSound() {
     moveSound.play().catch(error => {
         console.error('Could not play the move sound:', error);
     });
+}
+
+// Add a readable record after a move has passed all legality checks.
+function recordMove(piece, fromSquare, toSquare) {
+    const move = document.createElement('li');
+    const pieceIcon = piece.querySelector('svg').cloneNode(true);
+    pieceIcon.classList.add('move-history-piece');
+    pieceIcon.setAttribute('aria-hidden', 'true');
+
+    const moveText = document.createElement('span');
+    moveText.textContent = `${fromSquare.dataset.coordinates} → ${toSquare.dataset.coordinates}`;
+
+    move.append(pieceIcon, moveText);
+    moveHistory.append(move);
+    moveHistory.scrollTop = moveHistory.scrollHeight;
 }
 
 // Move a piece if the destination square is allowed.
@@ -72,6 +88,8 @@ function movePieceToSquare(piece, square) {
         const targetIsWhite = target.querySelector('svg').classList.contains('white');
         if (movingPieceIsWhite === targetIsWhite) return false;
     }
+
+    recordMove(piece, oldSquare, square);
 
     // If there is a piece there, move it to the captured pieces tray.
     if (target) {
@@ -326,4 +344,8 @@ gameBoard.addEventListener('click', event => {
     // Clear the old square's highlight and clear the selection.
     oldSquare.classList.remove('selected');
     selected = null;
+});
+
+document.querySelector('#resetButton').addEventListener('click', () => {
+    moveHistory.innerHTML = '';
 });
