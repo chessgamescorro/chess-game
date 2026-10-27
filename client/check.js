@@ -88,3 +88,27 @@ function moveLeavesKingInCheck(piece, toSquare) {
   // Tell the move handler whether it should reject the move.
   return stillInCheck;
 }
+
+
+function hasAnyLegalMovesLeft(color) {
+  const pieces = [...gameBoard.querySelectorAll('.piece')]
+  const squares = [...gameBoard.querySelectorAll('.square')]
+
+  for (const piece of pieces) {
+    const isWhite = piece.querySelector('svg').classList.contains('white');
+    const pieceColor = isWhite ? 'White' : "Black";
+
+    if (pieceColor !== color) continue;
+
+    for (const square of squares) {
+      if (
+        canPieceMoveTo(piece, square) &&
+        !moveLeavesKingInCheck(piece, square)
+      ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}

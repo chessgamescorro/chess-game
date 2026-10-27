@@ -152,7 +152,9 @@
     const oldSquare = movingPiece.parentElement;
     movePieceToSquare(movingPiece, square);
 
-    // Clear every possible-move marker when the current selection ends.
+
+
+      // Clear every possible-move marker when the current selection ends.
     gameBoard.querySelectorAll('.highlight').forEach(highlightedSquare => {
       highlightedSquare.classList.remove('highlight');
     });

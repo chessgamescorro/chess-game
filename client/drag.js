@@ -38,6 +38,66 @@ function isCurrentPlayerPiece(piece) {
     return (currentPlayer === 'White') === isWhite;
 }
 
+function canPieceMoveTo(piece, square) {
+  const oldSquare = piece.parentElement;
+
+  // Reject missing, off-board, or unchanged destinations.
+  if (!square || !gameBoard.contains(square) || square === oldSquare) return false;
+
+  // Only let the king move one square in any direction.
+  if (piece.dataset.piece === 'king' && !isKingMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // Only let the bishop move diagonally without jumping over pieces.
+  if (piece.dataset.piece === 'bishop' && !isBishopMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // Only let the knight move in an L shape.
+  if (piece.dataset.piece === 'knight' && !isKnightMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // Only let the rook move straight without jumping over pieces.
+  if (piece.dataset.piece === 'rook' && !isRookMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // A pawn can move forward or capture diagonally, so allow either rule.
+  if (
+      piece.dataset.piece === 'pawn' &&
+      !isPawnMoveAllowed(oldSquare, square) &&
+      !isPawnDiagonalCaptureAllowed(oldSquare, square)
+  ) {
+      return false;
+  }
+
+  // Only let the queen move diagonally or straight without jumping over pieces.
+  if (
+      piece.dataset.piece === 'queen' &&
+      !isQueenMoveAllowed(oldSquare, square)
+  ) {
+      return false;
+  }
+
+
+  // Check whether the destination contains another piece.
+  const target = square.querySelector('.piece');
+
+  // Do not capture a piece that has the same color.
+  if (target) {
+      // In chess, a king is never captured; checkmate ends the game instead.
+      if (target.dataset.piece === 'king') return false;
+
+      const movingPieceIsWhite = piece.querySelector('svg').classList.contains('white');
+      const targetIsWhite = target.querySelector('svg').classList.contains('white');
+      if (movingPieceIsWhite === targetIsWhite) return false;
+  }
+
+  return true;
+}
+
 // Move a piece if the destination square is allowed.
 function movePieceToSquare(piece, square) {
     // Save the square the piece is currently on.
@@ -47,53 +107,11 @@ function movePieceToSquare(piece, square) {
     if (gameOver || !square || !gameBoard.contains(square) || square === oldSquare) return false;
     if (!isCurrentPlayerPiece(piece)) return false;
 
-    // Only let the king move one square in any direction.
-    if (piece.dataset.piece === 'king' && !isKingMoveAllowed(oldSquare, square)) {
-        return false;
-    }
+    // Check movement rules without moving the piece yet.
+    if (!canPieceMoveTo(piece, square)) return false;
 
-    // Only let the bishop move diagonally without jumping over pieces.
-    if (piece.dataset.piece === 'bishop' && !isBishopMoveAllowed(oldSquare, square)) {
-        return false;
-    }
-
-    // Only let the knight move in an L shape.
-    if (piece.dataset.piece === 'knight' && !isKnightMoveAllowed(oldSquare, square)) {
-        return false;
-    }
-
-    // Only let the rook move straight without jumping over pieces.
-    if (piece.dataset.piece === 'rook' && !isRookMoveAllowed(oldSquare, square)) {
-        return false;
-    }
-
-    // A pawn can move forward or capture diagonally, so allow either rule.
-    if (
-        piece.dataset.piece === 'pawn' &&
-        !isPawnMoveAllowed(oldSquare, square) &&
-        !isPawnDiagonalCaptureAllowed(oldSquare, square)
-    ) {
-        return false;
-    }
-
-    // Only let the queen move diagonally or straight without jumping over pieces.
-    if (
-        piece.dataset.piece === 'queen' &&
-        !isQueenMoveAllowed(oldSquare, square)
-    ) {
-        return false;
-    }
-
-
-    // Check whether the destination contains another piece.
+    // Keep the target in this function for capture handling below.
     const target = square.querySelector('.piece');
-
-    // Do not capture a piece that has the same color.
-    if (target) {
-        const movingPieceIsWhite = piece.querySelector('svg').classList.contains('white');
-        const targetIsWhite = target.querySelector('svg').classList.contains('white');
-        if (movingPieceIsWhite === targetIsWhite) return false;
-    }
 
   // Add a flash to the king when it tries to move illegally in check.
   function flashUnsafeSquare(oldSquare) {
@@ -126,26 +144,7 @@ function movePieceToSquare(piece, square) {
             `#captured-${currentPlayer.toLowerCase()}`
         );
 
-        // Remember whether the captured piece is a king.
-        const capturedKing = target.dataset.piece === 'king';
-
         tray.append(target);
-
-        // Capturing a king ends the game and leaves the final position visible.
-        if (capturedKing) {
-            square.append(piece);
-            gameBoard.querySelectorAll('.highlight').forEach(highlightedSquare => {
-                highlightedSquare.classList.remove('highlight');
-            });
-            gameOver = true;
-            playMoveSound();
-            updateScore(currentPlayer);
-            showWinner(currentPlayer);
-            document.querySelector('#win-message').textContent = `${currentPlayer} wins!`;
-            document.querySelector('#win-dialog').showModal();
-            selected = null;
-            return true;
-        }
     }
 
     // Put the moving piece on the destination square.
@@ -159,8 +158,18 @@ function movePieceToSquare(piece, square) {
     // Switch whose turn it is and update the turn display.
     currentPlayer = currentPlayer === 'White' ? 'Black' : 'White';
   playerDisplay.textContent = currentPlayer;
-  console.log('White in check?', isKingInCheck('White'));
-  console.log('Black in check?', isKingInCheck('Black'));
+
+  // The player whose turn it is loses if they are in check with no legal move.
+  if (isKingInCheck(currentPlayer) && !hasAnyLegalMovesLeft(currentPlayer)) {
+    const winner = currentPlayer === 'White' ? 'Black' : 'White';
+    gameOver = true;
+    updateScore(winner);
+    showWinner(winner);
+    document.querySelector('#win-message').textContent = `${winner} wins by checkmate!`;
+    document.querySelector('#win-dialog').showModal();
+    selected = null;
+    return true;
+  }
   return true;
 }
 
