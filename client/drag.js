@@ -95,17 +95,25 @@ function movePieceToSquare(piece, square) {
         if (movingPieceIsWhite === targetIsWhite) return false;
     }
 
+  // Add a flash to the king when it tries to move illegally in check.
   function flashUnsafeSquare(oldSquare) {
-    oldSquare.classList.remove('unsafe-flash');
+    oldSquare.classList.remove('square-flash');
     void oldSquare.offsetWidth;
-    oldSquare.classList.add('unsafe-flash');
-    setTimeout(() => oldSquare.classList.remove('unsafe-flash'), 600);
+    oldSquare.classList.add('square-flash');
+    setTimeout(() => oldSquare.classList.remove('square-flash'), 600);
     }
 
-    // Reject the move if it leaves this player's king in check.
+  // Reject the move if it leaves this player's king in check.
   if (moveLeavesKingInCheck(piece, square)) {
-    if (piece.dataset.piece === 'king') {
-      flashUnsafeSquare(oldSquare);
+    const movingSideIsWhite = piece.querySelector('svg').classList.contains('white');
+
+    const king = [...gameBoard.querySelectorAll('.piece')].find(pieceOnBoard =>
+      pieceOnBoard.dataset.piece === 'king' &&
+      pieceOnBoard.querySelector('svg').classList.contains('white') === movingSideIsWhite
+    );
+
+    if (king) {
+      flashUnsafeSquare(king.closest(".square"));
     }
    return false;
   }
