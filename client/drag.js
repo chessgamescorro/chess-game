@@ -135,8 +135,10 @@ function movePieceToSquare(piece, square) {
 
     // Switch whose turn it is and update the turn display.
     currentPlayer = currentPlayer === 'White' ? 'Black' : 'White';
-    playerDisplay.textContent = currentPlayer;
-    return true;
+  playerDisplay.textContent = currentPlayer;
+  console.log('White in check?', isKingInCheck('White'));
+  console.log('Black in check?', isKingInCheck('Black'));
+  return true;
 }
 
 // Clear the move list when starting a new game.
@@ -262,4 +264,3 @@ document.addEventListener('pointercancel', event => {
     if (!activeDrag || event.pointerId !== activeDrag.pointerId) return;
     clearDrag();
 });
-
