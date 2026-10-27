@@ -95,6 +95,21 @@ function movePieceToSquare(piece, square) {
         if (movingPieceIsWhite === targetIsWhite) return false;
     }
 
+  function flashUnsafeSquare(oldSquare) {
+    oldSquare.classList.remove('unsafe-flash');
+    void oldSquare.offsetWidth;
+    oldSquare.classList.add('unsafe-flash');
+    setTimeout(() => oldSquare.classList.remove('unsafe-flash'), 600);
+    }
+
+    // Reject the move if it leaves this player's king in check.
+  if (moveLeavesKingInCheck(piece, square)) {
+    if (piece.dataset.piece === 'king') {
+      flashUnsafeSquare(oldSquare);
+    }
+   return false;
+  }
+
     recordMove(piece, oldSquare, square);
 
     // If there is a piece there, move it to the captured pieces tray.

@@ -21,6 +21,10 @@ function pieceAttackSquare(piece, targetSquare) {
     return isPawnDiagonalCaptureAllowed(fromSquare, targetSquare);
   }
 
+  if (piece.dataset.piece === 'king') {
+    return isKingMoveAllowed(fromSquare, targetSquare);
+}
+
   return false;
 }
 
@@ -49,4 +53,22 @@ function isKingInCheck(color) {
   return isSquareAttacked(
     king.closest('.square'), isWhite ? 'Black' : 'White'
   );
+}
+
+function moveLeavesKingInCheck(piece, toSquare) {
+  const originalSquare = piece.parentElement;
+  const pieceAtDestination = toSquare.querySelector('.piece');
+
+  const isWhite = piece.querySelector('svg').classList.contains('white');
+  const color = isWhite ? 'White' : 'Black';
+
+  if (pieceAtDestination) pieceAtDestination.remove();
+  toSquare.append(piece);
+
+  const stillInCheck = isKingInCheck(color);
+
+  originalSquare.append(piece);
+  if (pieceAtDestination) toSquare.append(pieceAtDestination);
+
+  return stillInCheck;
 }

@@ -35,7 +35,10 @@
                   pieceThere.querySelector('svg').classList.contains('white') === kingIsWhite;
 
               // Highlight nearby squares that aren't occupied by a friendly piece.
-              if (!hasFriendlyPiece && isKingMoveAllowed(fromSquare, targetSquare)) {
+            if (!hasFriendlyPiece &&
+              isKingMoveAllowed(fromSquare, targetSquare) &&
+              !moveLeavesKingInCheck(piece, targetSquare)
+            ) {
                   targetSquare.classList.add('highlight');
               }
           });
