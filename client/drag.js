@@ -231,7 +231,8 @@ document.addEventListener('pointermove', event => {
             event.clientX - activeDrag.startX,
             event.clientY - activeDrag.startY
         );
-        if (distance < 5) return;
+        if (distance < 5) return
+        ;
 
         // Make a copy of the piece to show under the pointer.
         const bounds = activeDrag.piece.getBoundingClientRect();
@@ -251,6 +252,11 @@ document.addEventListener('pointermove', event => {
             selected.parentElement.classList.remove('selected');
             selected = null;
         }
+        // Highlight the legal moves for the piece being dragged.
+        gameBoard.querySelectorAll('.highlight').forEach(square => {
+        square.classList.remove('highlight')
+        })
+        highlightMoves(activeDrag.piece)
     }
 
     // Position the preview under the pointer, keeping the starting grab point.

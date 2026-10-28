@@ -73,7 +73,6 @@ function createBoard() {
 // Render the initial chess position when the script loads.
 createBoard()
 
-
 // Zoek de knop op
 const changeButton = document.querySelector('#changeboard')
 
@@ -92,6 +91,8 @@ let boardColors = 0
 changeButton.addEventListener('click', () => {
     boardColors = (boardColors + 1) % boardPalettes.length
     const palette = boardPalettes[boardColors]
+    document.querySelector('#resetButton').style.backgroundColor = palette.dark
+    document.querySelector('.scoreboard h2').style.color = palette.dark
     document.querySelectorAll('.beige').forEach(square => {
         square.style.backgroundColor = palette.light
     })
@@ -114,6 +115,8 @@ const resetButton = document.querySelector('#resetButton');
 
 function resetGame() {
     boardColors = 0;
+    document.querySelector('#resetButton').style.backgroundColor = boardPalettes[0].dark
+    document.querySelector('.scoreboard h2').style.color = boardPalettes[0].dark
     currentPlayer = 'White';
     playerDisplay.textContent = currentPlayer;
     selected = null;
