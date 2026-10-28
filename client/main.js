@@ -13,6 +13,8 @@ const width = 8
 let currentPlayer = "White";
 let selected = null;
 let gameOver = false;
+// Keep track of moved piece elements so a king or rook cannot regain castling rights by returning.
+let movedPieces = new WeakSet();
 playerDisplay.textContent = currentPlayer;
 
 // Store the starting position row by row, using empty strings for empty squares.
@@ -121,6 +123,8 @@ function resetGame() {
     playerDisplay.textContent = currentPlayer;
     selected = null;
     gameOver = false;
+    // A fresh game gives the newly created kings and rooks their castling rights back.
+    movedPieces = new WeakSet();
     gameBoard.classList.remove('rotated');
     boardFrame.classList.remove('rotated');
     document.querySelector('.board-area').classList.remove('rotated');

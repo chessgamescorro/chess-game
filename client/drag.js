@@ -45,7 +45,10 @@ function canPieceMoveTo(piece, square) {
   if (!square || !gameBoard.contains(square) || square === oldSquare) return false;
 
   // Only let the king move one square in any direction.
-  if (piece.dataset.piece === 'king' && !isKingMoveAllowed(oldSquare, square)) {
+  if (piece.dataset.piece === 'king' &&
+    !isKingMoveAllowed(oldSquare, square) &&
+    !isCastlingAllowedKing(piece, oldSquare, square)
+  ) {
       return false;
   }
 
@@ -112,6 +115,9 @@ function movePieceToSquare(piece, square) {
 
     // Keep the target in this function for capture handling below.
     const target = square.querySelector('.piece');
+    // Remember whether this two-square king move is a castle before changing the board.
+    const isCastle = piece.dataset.piece === 'king' &&
+        Math.abs(Number(square.dataset.column) - Number(oldSquare.dataset.column)) === 2;
 
   // Add a flash to the king when it tries to move illegally in check.
   function flashUnsafeSquare(oldSquare) {
@@ -149,6 +155,12 @@ function movePieceToSquare(piece, square) {
 
     // Put the moving piece on the destination square.
   square.append(piece);
+  // Castling moves the rook in the same turn as the king.
+  if (isCastle) moveCastlingRook(piece, oldSquare, square);
+  // Moving a king or rook permanently removes that piece's castling right.
+  if (piece.dataset.piece === 'king' || piece.dataset.piece === 'rook') {
+      movedPieces.add(piece);
+  }
   // Remove the move highlights after the piece moves.
   gameBoard.querySelectorAll('.highlight').forEach(square => {
       square.classList.remove('highlight');

@@ -1,3 +1,21 @@
+// Check wheter the king can move two squares to the left and right if it hasnt moved
+function isCastlingAllowedKing(fromSquare, toSquare) {
+  // Read the start and destination columns, and find the distance between them.
+  const columnDistance = Math.abs(
+      Number(toSquare.dataset.column) - Number(fromSquare.dataset.column)
+  );
+
+  // Do the same for the rows.
+  const rowDistance = Math.abs(
+      Number(toSquare.dataset.row) - Number(fromSquare.dataset.row)
+  );
+
+  // Allow the move if it is at most one square in each direction,
+  // and the king is not staying on its current square.
+  return columnDistance <= 2 && rowDistance <= 0 &&
+    columnDistance + rowDistance > 0;
+  }
+
 // Check whether the king moves one square in any direction.
 function isKingMoveAllowed(fromSquare, toSquare) {
     // Read the start and destination columns, and find the distance between them.

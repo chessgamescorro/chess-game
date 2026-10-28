@@ -9,27 +9,9 @@ function highlightMoves(piece) {
 
         if (hasFriendlyPiece) return;
 
-        const pieceType = piece.dataset.piece;
-        const canMove = (
-            pieceType === 'king' &&
-            isKingMoveAllowed(fromSquare, targetSquare) &&
-            !moveLeavesKingInCheck(piece, targetSquare)
-        ) || (
-            pieceType === 'bishop' &&
-            isBishopMoveAllowed(fromSquare, targetSquare)
-        ) || (
-            pieceType === 'rook' &&
-            isRookMoveAllowed(fromSquare, targetSquare)
-        ) || (
-            pieceType === 'knight' &&
-            isKnightMoveAllowed(fromSquare, targetSquare)
-        ) || (
-            pieceType === 'pawn' &&
-            isPawnMoveAllowed(fromSquare, targetSquare)
-        ) || (
-            pieceType === 'queen' &&
-            isQueenMoveAllowed(fromSquare, targetSquare)
-        );
+        // Use the same complete legality checks as dragging, including castling.
+        const canMove = canPieceMoveTo(piece, targetSquare) &&
+            !moveLeavesKingInCheck(piece, targetSquare);
 
         if (canMove) targetSquare.classList.add('highlight');
     });
