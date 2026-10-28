@@ -102,7 +102,7 @@ function canPieceMoveTo(piece, square) {
 }
 
 // Move a piece if the destination square is allowed.
-function movePieceToSquare(piece, square) {
+async function movePieceToSquare(piece, square) {
     // Save the square the piece is currently on.
     const oldSquare = piece.parentElement;
 
@@ -161,6 +161,10 @@ function movePieceToSquare(piece, square) {
   if (piece.dataset.piece === 'king' || piece.dataset.piece === 'rook') {
       movedPieces.add(piece);
   }
+
+  // Check for pawn promotion immediately after the move.
+  await checkPromotion(square);
+
   // Remove the move highlights after the piece moves.
   gameBoard.querySelectorAll('.highlight').forEach(square => {
       square.classList.remove('highlight');

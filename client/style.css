@@ -169,6 +169,17 @@ dialog button {
     background: rgb(155, 9, 9);
 }
 
+.promotion-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.promotion-options .promotion-piece {
+    margin: 0;
+}
+
 .game-actions {
     display: grid;
     gap: 10px;
