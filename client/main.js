@@ -12,6 +12,8 @@ const width = 8
 // Turn Status
 let currentPlayer = "White";
 let selected = null;
+let gameOver = false;
+playerDisplay.textContent = currentPlayer;
 
 // Store the starting position row by row, using empty strings for empty squares.
 const startPieces = [
@@ -71,91 +73,69 @@ function createBoard() {
 // Render the initial chess position when the script loads.
 createBoard()
 
-
 // Zoek de knop op
 const changeButton = document.querySelector('#changeboard')
+
+// The first palette matches the board's default CSS colors.
+const boardPalettes = [
+    { light: 'rgb(238, 238, 210)', dark: 'rgb(155, 9, 9)' },
+    { light: '#f0d9b5', dark: '#eb83d4' },
+    { light: 'rgb(238, 238, 210)', dark: '#00b7ff' },
+    { light: 'rgb(238, 238, 210)', dark: 'rgb(118, 150, 86)' }
+]
 
 // Houd bij welke kleurencombinatie actief is
 let boardColors = 0
 
 // Verander de bordkleuren wanneer je op de knop klikt
 changeButton.addEventListener('click', () => {
-    const beigeSquares = document.querySelectorAll('.beige')
-    const brownSquares = document.querySelectorAll('.brown')
-
-    // Verhoog het nummer bij elke klik
-    boardColors++
-
-    if (boardColors % 4 === 1) {
-        // Kleurencombinatie 1
-        beigeSquares.forEach(square => {
-            square.style.backgroundColor = '#f0d9b5'
-        })
-
-        brownSquares.forEach(square => {
-            square.style.backgroundColor = '#b58863'
-        })
-
-    } else if (boardColors % 4 === 2) {
-        // Kleurencombinatie 2
-        beigeSquares.forEach(square => {
-            square.style.backgroundColor = '#f0d9b5'
-        })
-
-        brownSquares.forEach(square => {
-            square.style.backgroundColor = '#eb83d4'
-        })
-    } else if (boardColors % 4 === 3) {
-        // Kleurencombinatie 3
-        beigeSquares.forEach(square => {
-            square.style.backgroundColor = 'rgb(238, 238, 210)'
-        })
-
-        brownSquares.forEach(square => {
-            square.style.backgroundColor = '#00b7ff'
-        })
-    } else {
-        // Terug naar de originele kleuren
-        beigeSquares.forEach(square => {
-            square.style.backgroundColor = 'rgb(238, 238, 210)'
-        })
-
-        brownSquares.forEach(square => {
-            square.style.backgroundColor = 'rgb(118, 150, 86)'
-        })
-    }
+    boardColors = (boardColors + 1) % boardPalettes.length
+    const palette = boardPalettes[boardColors]
+    document.querySelector('#resetButton').style.backgroundColor = palette.dark
+    document.querySelector('.scoreboard h2').style.color = palette.dark
+    document.querySelectorAll('.beige').forEach(square => {
+        square.style.backgroundColor = palette.light
+    })
+    document.querySelectorAll('.brown').forEach(square => {
+        square.style.backgroundColor = palette.dark
+    })
 })
 
         function rotateBoard(){
             
             gameBoard.classList.toggle('rotated')
             boardFrame.classList.toggle('rotated')
+            document.querySelector('.board-area').classList.toggle('rotated')
         }
 
 const rotateButton = document.querySelector('#rotateBoard')
 rotateButton.addEventListener('click', rotateBoard)
 
-// Reset het hele schaakbord
 const resetButton = document.querySelector('#resetButton');
 
-resetButton.addEventListener('click', () => {
-    // Reset de kleuren
+function resetGame() {
     boardColors = 0;
-
-    // Reset de speler, selectie en rotatie
-    currentPlayer = "White";
+    document.querySelector('#resetButton').style.backgroundColor = boardPalettes[0].dark
+    document.querySelector('.scoreboard h2').style.color = boardPalettes[0].dark
+    currentPlayer = 'White';
     playerDisplay.textContent = currentPlayer;
     selected = null;
+    gameOver = false;
     gameBoard.classList.remove('rotated');
     boardFrame.classList.remove('rotated');
+    document.querySelector('.board-area').classList.remove('rotated');
     document.querySelectorAll('.captured').forEach(tray => {
         tray.innerHTML = '';
     });
-
-    // Maak het bord opnieuw met alle originele stukken
     createBoard();
+    document.querySelector('#move-history').innerHTML = '';
+    infoDisplay.textContent = '';
+    kingState.textContent = '';
+    document.querySelector('#win-dialog').close();
+}
 
-    // Wis berichten
-  infoDisplay.textContent = '';
-  kingState.textContent = '';
+resetButton.addEventListener('click', resetGame);
+document.querySelector('#new-game-button').addEventListener('click', resetGame);
+document.querySelector('#view-board-button').addEventListener('click', () => {
+    document.querySelector('#win-dialog').close();
 });

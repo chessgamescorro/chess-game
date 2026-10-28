@@ -47,18 +47,44 @@
             <p id="info-display" class="game-message" aria-live="polite"></p>
             <p id="King-display" class="game-message" aria-live="polite"></p>
 
+            <section class="move-history" aria-labelledby="move-history-heading">
+                <h2 id="move-history-heading">Move history</h2>
+                <ol id="move-history" aria-live="polite"></ol>
+            </section>
+
             <div class="game-actions">
                 <button id="resetButton" class="reset">New game</button>
-                <button id="changeboard" class="secondary-button">Change board</button>
+                <button id="changeboard" class="secondary-button">Change theme</button>
                 <button id="rotateBoard" class="secondary-button">Rotate board</button>
              </div>
         </aside>
     </main>
 
+    <dialog id="promotion-dialog" aria-labelledby="promotion-heading">
+        <h2 id="promotion-heading">Pawn promotion</h2>
+        <p>Select a piece to promote your pawn:</p>
+        <div class="promotion-options">
+            <button class="promotion-piece" type="button" data-piece="queen">Queen</button>
+            <button class="promotion-piece" type="button" data-piece="rook">Rook</button>
+            <button class="promotion-piece" type="button" data-piece="bishop">Bishop</button>
+            <button class="promotion-piece" type="button" data-piece="knight">Knight</button>
+        </div>
+    </dialog>
+
+    <dialog id="win-dialog">
+        <h2 id="win-message"></h2>
+        <button id="view-board-button" type="button">View board</button>
+        <button id="new-game-button" type="button">New game</button>
+    </dialog>
+
     <script src="piece.js"></script>
     <script src="main.js"></script>
     <script src="movement.js"></script>
+    <script src="promotion.js"></script>
+    <script src="check.js"></script>
+    <script src="pieceHighlight.js"></script>
     <script src="drag.js"></script>
     <script src="scoreboard.js"></script>
+
 </body>
 </html>

@@ -1,5 +1,6 @@
 // Load the sound that plays after a successful move.
 const moveSound = new Audio('woosh.mp3');
+const moveHistory = document.querySelector('#move-history');
 
 // Store information about a piece while it is being dragged.
 let activeDrag = null;
@@ -17,61 +18,125 @@ function playMoveSound() {
     });
 }
 
+// Add a readable record after a move has passed all legality checks.
+function recordMove(piece, fromSquare, toSquare) {
+    const move = document.createElement('li');
+    const pieceIcon = piece.querySelector('svg').cloneNode(true);
+    pieceIcon.classList.add('move-history-piece');
+    pieceIcon.setAttribute('aria-hidden', 'true');
+
+    const moveText = document.createElement('span');
+    moveText.textContent = `${fromSquare.dataset.coordinates} → ${toSquare.dataset.coordinates}`;
+
+    move.append(pieceIcon, moveText);
+    moveHistory.append(move);
+    moveHistory.scrollTop = moveHistory.scrollHeight;
+}
+
+function isCurrentPlayerPiece(piece) {
+    const isWhite = piece.querySelector('svg').classList.contains('white');
+    return (currentPlayer === 'White') === isWhite;
+}
+
+function canPieceMoveTo(piece, square) {
+  const oldSquare = piece.parentElement;
+
+  // Reject missing, off-board, or unchanged destinations.
+  if (!square || !gameBoard.contains(square) || square === oldSquare) return false;
+
+  // Only let the king move one square in any direction.
+  if (piece.dataset.piece === 'king' && !isKingMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // Only let the bishop move diagonally without jumping over pieces.
+  if (piece.dataset.piece === 'bishop' && !isBishopMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // Only let the knight move in an L shape.
+  if (piece.dataset.piece === 'knight' && !isKnightMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // Only let the rook move straight without jumping over pieces.
+  if (piece.dataset.piece === 'rook' && !isRookMoveAllowed(oldSquare, square)) {
+      return false;
+  }
+
+  // A pawn can move forward or capture diagonally, so allow either rule.
+  if (
+      piece.dataset.piece === 'pawn' &&
+      !isPawnMoveAllowed(oldSquare, square) &&
+      !isPawnDiagonalCaptureAllowed(oldSquare, square)
+  ) {
+      return false;
+  }
+
+  // Only let the queen move diagonally or straight without jumping over pieces.
+  if (
+      piece.dataset.piece === 'queen' &&
+      !isQueenMoveAllowed(oldSquare, square)
+  ) {
+      return false;
+  }
+
+
+  // Check whether the destination contains another piece.
+  const target = square.querySelector('.piece');
+
+  // Do not capture a piece that has the same color.
+  if (target) {
+      // In chess, a king is never captured; checkmate ends the game instead.
+      if (target.dataset.piece === 'king') return false;
+
+      const movingPieceIsWhite = piece.querySelector('svg').classList.contains('white');
+      const targetIsWhite = target.querySelector('svg').classList.contains('white');
+      if (movingPieceIsWhite === targetIsWhite) return false;
+  }
+
+  return true;
+}
+
 // Move a piece if the destination square is allowed.
-function movePieceToSquare(piece, square) {
+async function movePieceToSquare(piece, square) {
     // Save the square the piece is currently on.
     const oldSquare = piece.parentElement;
 
     // Stop if the destination is missing, outside the board, or the same square.
-    if (!square || !gameBoard.contains(square) || square === oldSquare) return false;
+    if (gameOver || !square || !gameBoard.contains(square) || square === oldSquare) return false;
+    if (!isCurrentPlayerPiece(piece)) return false;
 
-    // Only let the king move one square in any direction.
-    if (piece.dataset.piece === 'king' && !isKingMoveAllowed(oldSquare, square)) {
-        return false;
-    }
+    // Check movement rules without moving the piece yet.
+    if (!canPieceMoveTo(piece, square)) return false;
 
-    // Only let the bishop move diagonally without jumping over pieces.
-    if (piece.dataset.piece === 'bishop' && !isBishopMoveAllowed(oldSquare, square)) {
-        return false;
-    }
-
-    // Only let the knight move in an L shape.
-    if (piece.dataset.piece === 'knight' && !isKnightMoveAllowed(oldSquare, square)) {
-        return false;
-    }
-
-    // Only let the rook move straight without jumping over pieces.
-    if (piece.dataset.piece === 'rook' && !isRookMoveAllowed(oldSquare, square)) {
-        return false;
-    }
-
-    // A pawn can move forward or capture diagonally, so allow either rule.
-    if (
-        piece.dataset.piece === 'pawn' &&
-        !isPawnMoveAllowed(oldSquare, square) &&
-        !isPawnDiagonalCaptureAllowed(oldSquare, square)
-    ) {
-        return false;
-    }
-
-    // Only let the queen move diagonally or straight without jumping over pieces.
-    if (
-        piece.dataset.piece === 'queen' &&
-        !isQueenMoveAllowed(oldSquare, square)
-    ) {
-        return false;
-    }
-
-
-    // Check whether the destination contains another piece.
+    // Keep the target in this function for capture handling below.
     const target = square.querySelector('.piece');
 
-    // Do not capture a piece that has the same color.
-    if (target) {
-        const movingPieceIsWhite = piece.querySelector('svg').classList.contains('white');
-        const targetIsWhite = target.querySelector('svg').classList.contains('white');
-        if (movingPieceIsWhite === targetIsWhite) return false;
+  // Add a flash to the king when it tries to move illegally in check.
+  function flashUnsafeSquare(oldSquare) {
+    oldSquare.classList.remove('square-flash');
+    void oldSquare.offsetWidth;
+    oldSquare.classList.add('square-flash');
+    setTimeout(() => oldSquare.classList.remove('square-flash'), 600);
     }
+
+  // Reject the move if it leaves this player's king in check.
+  if (moveLeavesKingInCheck(piece, square)) {
+    const movingSideIsWhite = piece.querySelector('svg').classList.contains('white');
+
+    const king = [...gameBoard.querySelectorAll('.piece')].find(pieceOnBoard =>
+      pieceOnBoard.dataset.piece === 'king' &&
+      pieceOnBoard.querySelector('svg').classList.contains('white') === movingSideIsWhite
+    );
+
+    if (king) {
+      flashUnsafeSquare(king.closest(".square"));
+    }
+   return false;
+  }
+
+    recordMove(piece, oldSquare, square);
 
     // If there is a piece there, move it to the captured pieces tray.
     if (target) {
@@ -79,41 +144,43 @@ function movePieceToSquare(piece, square) {
             `#captured-${currentPlayer.toLowerCase()}`
         );
 
-        // Remember whether the captured piece is a king.
-        const capturedKing = target.dataset.piece === 'king';
-
         tray.append(target);
-
-        // Capturing a king ends the game and starts a fresh board.
-        if (capturedKing) {
-            playMoveSound();
-            updateScore(currentPlayer);
-            showWinner(currentPlayer);
-
-            selected = null;
-            currentPlayer = 'White';
-            playerDisplay.textContent = currentPlayer;
-
-            document.querySelectorAll('.captured').forEach(capturedTray => {
-                capturedTray.innerHTML = '';
-            });
-
-            createBoard();
-            gameBoard.classList.remove('rotated');
-            boardFrame.classList.remove('rotated');
-            return true;
-        }
     }
 
     // Put the moving piece on the destination square.
-    square.append(piece);
+  square.append(piece);
+
+  // Check for pawn promotion immediately after the move.
+  await checkPromotion(square);
+
+  // Remove the move highlights after the piece moves.
+  gameBoard.querySelectorAll('.highlight').forEach(square => {
+      square.classList.remove('highlight');
+  });
     playMoveSound();
 
     // Switch whose turn it is and update the turn display.
     currentPlayer = currentPlayer === 'White' ? 'Black' : 'White';
-    playerDisplay.textContent = currentPlayer;
+  playerDisplay.textContent = currentPlayer;
+
+  // The player whose turn it is loses if they are in check with no legal move.
+  if (isKingInCheck(currentPlayer) && !hasAnyLegalMovesLeft(currentPlayer)) {
+    const winner = currentPlayer === 'White' ? 'Black' : 'White';
+    gameOver = true;
+    updateScore(winner);
+    showWinner(winner);
+    document.querySelector('#win-message').textContent = `${winner} wins by checkmate!`;
+    document.querySelector('#win-dialog').showModal();
+    selected = null;
     return true;
+  }
+  return true;
 }
+
+// Clear the move list when starting a new game.
+document.querySelector('#resetButton').addEventListener('click', () => {
+    moveHistory.innerHTML = '';
+});
 
 // End the current drag and remove its temporary visual effects.
 function clearDrag() {
@@ -130,11 +197,19 @@ function clearDrag() {
 
 // Start tracking a drag when the player presses the left mouse button on a piece.
 gameBoard.addEventListener('pointerdown', event => {
+    if (gameOver) return;
+
     const piece = event.target.closest('.piece');
     const square = piece?.closest('.square');
 
     // Ignore clicks that did not start on a piece on this board.
-    if (!piece || !square || !gameBoard.contains(piece) || event.button !== 0) return;
+    if (
+        !piece ||
+        !square ||
+        !gameBoard.contains(piece) ||
+        event.button !== 0 ||
+        !isCurrentPlayerPiece(piece)
+    ) return;
 
     // Save the piece and pointer position so we can move its preview smoothly.
     activeDrag = {
@@ -160,7 +235,8 @@ document.addEventListener('pointermove', event => {
             event.clientX - activeDrag.startX,
             event.clientY - activeDrag.startY
         );
-        if (distance < 5) return;
+        if (distance < 5) return
+        ;
 
         // Make a copy of the piece to show under the pointer.
         const bounds = activeDrag.piece.getBoundingClientRect();
@@ -168,11 +244,6 @@ document.addEventListener('pointermove', event => {
         preview.classList.add('drag-preview');
         preview.style.width = `${bounds.width}px`;
         preview.style.height = `${bounds.height}px`;
-
-        // Keep the preview orientation consistent if the board is rotated.
-        if (gameBoard.classList.contains('rotated')) {
-            preview.classList.add('drag-preview-rotated');
-        }
 
         // Show the preview and mark the original piece as being dragged.
         document.body.append(preview);
@@ -185,6 +256,11 @@ document.addEventListener('pointermove', event => {
             selected.parentElement.classList.remove('selected');
             selected = null;
         }
+        // Highlight the legal moves for the piece being dragged.
+        gameBoard.querySelectorAll('.highlight').forEach(square => {
+        square.classList.remove('highlight')
+        })
+        highlightMoves(activeDrag.piece)
     }
 
     // Position the preview under the pointer, keeping the starting grab point.
@@ -229,44 +305,4 @@ document.addEventListener('pointerup', event => {
 document.addEventListener('pointercancel', event => {
     if (!activeDrag || event.pointerId !== activeDrag.pointerId) return;
     clearDrag();
-});
-
-// Select a piece or move the selected piece when the player clicks the board.
-gameBoard.addEventListener('click', event => {
-    // A drag already handled this interaction, so ignore its follow-up click.
-    if (suppressClick) {
-        suppressClick = false;
-        window.clearTimeout(suppressClickTimer);
-        return;
-    }
-
-    // Find the square and piece that were clicked.
-    const square = event.target.closest('.square');
-    const piece = event.target.closest('.piece');
-    if (!square) return;
-
-    // If nothing is selected yet, select the clicked piece.
-    if (!selected) {
-        if (!piece) return;
-
-        selected = piece;
-        square.classList.add('selected');
-        return;
-    }
-
-    // Clicking the selected piece again unselects it.
-    if (piece === selected) {
-        selected.parentElement.classList.remove('selected');
-        selected = null;
-        return;
-    }
-
-    // Try to move the selected piece to the clicked square.
-    const movingPiece = selected;
-    const oldSquare = movingPiece.parentElement;
-    movePieceToSquare(movingPiece, square);
-
-    // Clear the old square's highlight and clear the selection.
-    oldSquare.classList.remove('selected');
-    selected = null;
 });
