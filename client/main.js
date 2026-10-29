@@ -4,7 +4,6 @@
 const gameBoard = document.querySelector('#gameboard')
 const boardFrame = document.querySelector('.board-frame')
 const playerDisplay = document.querySelector('#player')
-const infoDisplay = document.querySelector('#info-display')
 
 // The board has eight squares in each row and column.
 const width = 8
@@ -45,8 +44,6 @@ function createBoard() {
       square.dataset.row = row
       square.dataset.column = column
       square.dataset.coordinates = `abcdefgh`[column] + (8 - row)
-      square.classList.add('row')
-      square.classList.add('column')
       square.dataset.file = `abcdefgh`[column]
       square.dataset.rank = 8 - row
 
@@ -133,7 +130,6 @@ function resetGame() {
     });
     createBoard();
     document.querySelector('#move-history').innerHTML = '';
-    infoDisplay.textContent = '';
     kingState.textContent = '';
     document.querySelector('#win-dialog').close();
 }

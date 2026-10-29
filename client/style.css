@@ -320,11 +320,6 @@ button:active {
     justify-content: center;
     position: relative;
 }
-.square.rotated {
-    transform: rotate(180deg);
-    transition: transform 0.2s ease;
-}
-
 /* Apply alternating colors to the two square classes. */
 .beige {
     background-color: rgb(9, 9, 9);
@@ -491,23 +486,6 @@ body {
 }
 
 
-
-#gameboard .piece.moving {
-    animation: chessMove 0.6s ease-in-out;
-    transform-origin: center;
-}
-
-@keyframes chessMove {
-    0% {
-        scale: 1;
-    }
-    50% {
-        scale: 1.5;
-    }
-    100% {
-        scale: 1;
-    }
-}
 
 .piece {
     position: relative;
