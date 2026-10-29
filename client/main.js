@@ -80,7 +80,7 @@ const changeButton = document.querySelector('#changeboard')
 
 // The first palette matches the board's default CSS colors.
 const boardPalettes = [
-    { light: 'rgb(238, 238, 210)', dark: 'rgb(155, 9, 9)' },
+    { light: 'rgb(9, 9, 9)', dark: 'rgb(155, 9, 9)' },
     { light: '#f0d9b5', dark: '#eb83d4' },
     { light: 'rgb(238, 238, 210)', dark: '#00b7ff' },
     { light: 'rgb(238, 238, 210)', dark: 'rgb(118, 150, 86)' }
@@ -104,7 +104,7 @@ changeButton.addEventListener('click', () => {
 })
 
         function rotateBoard(){
-            
+
             gameBoard.classList.toggle('rotated')
             boardFrame.classList.toggle('rotated')
             document.querySelector('.board-area').classList.toggle('rotated')
