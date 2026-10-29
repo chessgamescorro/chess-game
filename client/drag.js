@@ -156,7 +156,7 @@ async function movePieceToSquare(piece, square) {
     // Put the moving piece on the destination square.
   square.append(piece);
   // Castling moves the rook in the same turn as the king.
-  if (isCastle) moveCastlingRook(piece, oldSquare, square);
+  if (isCastle) moveCastlingRook(oldSquare, square);
   // Moving a king or rook permanently removes that piece's castling right.
   if (piece.dataset.piece === 'king' || piece.dataset.piece === 'rook') {
       movedPieces.add(piece);
