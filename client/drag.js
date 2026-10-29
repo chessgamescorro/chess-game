@@ -18,17 +18,238 @@ function playMoveSound() {
     });
 }
 
+// Global history snapshots and time-travel state
+var historySnapshots = [];
+var viewingHistoryIndex = null;
+var liveGameBoardContent = null;
+var liveCapturedWhite = null;
+var liveCapturedBlack = null;
+var liveCurrentPlayer = null;
+var liveGameOver = false;
+var liveKingDisplay = '';
+
+function takeBoardSnapshot() {
+    const squares = [];
+    gameBoard.querySelectorAll('.square').forEach(sq => {
+        const piece = sq.querySelector('.piece');
+        if (piece) {
+            squares.push({
+                piece: piece.dataset.piece,
+                isWhite: piece.querySelector('svg').classList.contains('white')
+            });
+        } else {
+            squares.push(null);
+        }
+    });
+
+    const capturedWhite = [];
+    document.querySelectorAll('#captured-white .piece').forEach(p => {
+        capturedWhite.push(p.dataset.piece);
+    });
+
+    const capturedBlack = [];
+    document.querySelectorAll('#captured-black .piece').forEach(p => {
+        capturedBlack.push(p.dataset.piece);
+    });
+
+    return {
+        squares,
+        capturedWhite,
+        capturedBlack,
+        player: currentPlayer,
+        kingDisplay: document.querySelector('#King-display') ? document.querySelector('#King-display').textContent : ''
+    };
+}
+
+function saveHistorySnapshot() {
+    historySnapshots.push(takeBoardSnapshot());
+}
+
+function clearHistorySnapshots() {
+    historySnapshots = [];
+    viewingHistoryIndex = null;
+    liveGameBoardContent = null;
+    liveCapturedWhite = null;
+    liveCapturedBlack = null;
+    const revertBtn = document.querySelector('#revertHistoryBtn');
+    if (revertBtn) revertBtn.style.display = 'none';
+}
+
+function createPreviewSquares() {
+    const fragment = document.createDocumentFragment();
+    for (let index = 0; index < 64; index++) {
+        const square = document.createElement('div');
+        square.classList.add('square');
+        const row = Math.floor(index / 8);
+        const column = index % 8;
+        square.classList.add((row + column) % 2 === 0 ? 'beige' : 'brown');
+        square.dataset.row = row;
+        square.dataset.column = column;
+        square.dataset.coordinates = 'abcdefgh'[column] + (8 - row);
+        square.dataset.file = 'abcdefgh'[column];
+        square.dataset.rank = 8 - row;
+        fragment.append(square);
+    }
+    return fragment;
+}
+
+function renderBoardSnapshot(snapshot) {
+    const isSvg = typeof currentPieceStyle !== 'undefined' && currentPieceStyle === 'svg';
+    const squares = gameBoard.querySelectorAll('.square');
+
+    snapshot.squares.forEach((sqData, index) => {
+        const square = squares[index];
+        if (!square) return;
+        square.innerHTML = '';
+        if (sqData) {
+            square.innerHTML = createPieceHTML(sqData.piece, isSvg);
+            square.firstChild?.setAttribute('draggable', 'false');
+            const svg = square.querySelector('svg');
+            if (svg) {
+                svg.classList.add(sqData.isWhite ? 'white' : 'black');
+            }
+        }
+    });
+
+    const trayWhite = document.querySelector('#captured-white');
+    if (trayWhite) {
+        trayWhite.innerHTML = '';
+        snapshot.capturedWhite.forEach(pieceType => {
+            const temp = document.createElement('div');
+            temp.innerHTML = createPieceHTML(pieceType, isSvg);
+            const el = temp.firstElementChild;
+            if (el) {
+                el.querySelector('svg')?.classList.add('white');
+                trayWhite.append(el);
+            }
+        });
+    }
+
+    const trayBlack = document.querySelector('#captured-black');
+    if (trayBlack) {
+        trayBlack.innerHTML = '';
+        snapshot.capturedBlack.forEach(pieceType => {
+            const temp = document.createElement('div');
+            temp.innerHTML = createPieceHTML(pieceType, isSvg);
+            const el = temp.firstElementChild;
+            if (el) {
+                el.querySelector('svg')?.classList.add('black');
+                trayBlack.append(el);
+            }
+        });
+    }
+
+    currentPlayer = snapshot.player;
+    if (typeof updateTurnDisplay === 'function') {
+        updateTurnDisplay();
+    } else {
+        const playerDisplay = document.querySelector('#player');
+        if (playerDisplay) playerDisplay.textContent = currentPlayer;
+    }
+}
+
+function viewHistoryMove(moveIndex) {
+    if (moveIndex < 0 || moveIndex >= historySnapshots.length) return;
+
+    // If clicking the currently viewed historical move, revert back to live game
+    if (viewingHistoryIndex === moveIndex) {
+        revertToLiveGame();
+        return;
+    }
+
+    // Save live DOM elements and state before viewing history
+    if (viewingHistoryIndex === null) {
+        liveGameBoardContent = Array.from(gameBoard.children);
+        const trayWhite = document.querySelector('#captured-white');
+        const trayBlack = document.querySelector('#captured-black');
+        liveCapturedWhite = trayWhite ? Array.from(trayWhite.children) : [];
+        liveCapturedBlack = trayBlack ? Array.from(trayBlack.children) : [];
+        liveCurrentPlayer = currentPlayer;
+        liveGameOver = gameOver;
+        const kingDisplayEl = document.querySelector('#King-display');
+        liveKingDisplay = kingDisplayEl ? kingDisplayEl.textContent : '';
+    }
+
+    viewingHistoryIndex = moveIndex;
+
+    const moveItems = document.querySelectorAll('#move-history li');
+    moveItems.forEach((li, idx) => {
+        if (idx === moveIndex) {
+            li.classList.add('active-history');
+        } else {
+            li.classList.remove('active-history');
+        }
+    });
+
+    gameBoard.replaceChildren(createPreviewSquares());
+    renderBoardSnapshot(historySnapshots[moveIndex]);
+
+    const revertBtn = document.querySelector('#revertHistoryBtn');
+    if (revertBtn) {
+        revertBtn.style.display = 'block';
+    }
+}
+
+function revertToLiveGame() {
+    if (viewingHistoryIndex === null) return;
+
+    if (liveGameBoardContent) {
+        gameBoard.replaceChildren(...liveGameBoardContent);
+    }
+    const trayWhite = document.querySelector('#captured-white');
+    if (trayWhite && liveCapturedWhite) {
+        trayWhite.replaceChildren(...liveCapturedWhite);
+    }
+    const trayBlack = document.querySelector('#captured-black');
+    if (trayBlack && liveCapturedBlack) {
+        trayBlack.replaceChildren(...liveCapturedBlack);
+    }
+
+    currentPlayer = liveCurrentPlayer;
+    gameOver = liveGameOver;
+    const kingDisplayEl = document.querySelector('#King-display');
+    if (kingDisplayEl) kingDisplayEl.textContent = liveKingDisplay;
+
+    if (typeof updateTurnDisplay === 'function') {
+        updateTurnDisplay();
+    } else {
+        const playerDisplay = document.querySelector('#player');
+        if (playerDisplay) playerDisplay.textContent = currentPlayer;
+    }
+
+    viewingHistoryIndex = null;
+    liveGameBoardContent = null;
+    liveCapturedWhite = null;
+    liveCapturedBlack = null;
+
+    document.querySelectorAll('#move-history li').forEach(li => li.classList.remove('active-history'));
+    const revertBtn = document.querySelector('#revertHistoryBtn');
+    if (revertBtn) {
+        revertBtn.style.display = 'none';
+    }
+}
+
 // Add a readable record after a move has passed all legality checks.
 function recordMove(piece, fromSquare, toSquare) {
+    const moveIndex = historySnapshots.length;
     const move = document.createElement('li');
+    move.dataset.index = moveIndex;
+    move.dataset.piece = piece.dataset.piece;
+
     const pieceIcon = piece.querySelector('svg').cloneNode(true);
     pieceIcon.classList.add('move-history-piece');
     pieceIcon.setAttribute('aria-hidden', 'true');
+    pieceIcon.dataset.piece = piece.dataset.piece;
 
     const moveText = document.createElement('span');
     moveText.textContent = `${fromSquare.dataset.coordinates} → ${toSquare.dataset.coordinates}`;
 
     move.append(pieceIcon, moveText);
+
+    move.addEventListener('click', () => {
+        viewHistoryMove(moveIndex);
+    });
+
     moveHistory.append(move);
     moveHistory.scrollTop = moveHistory.scrollHeight;
 }
@@ -163,7 +384,21 @@ async function movePieceToSquare(piece, square) {
   }
 
   // Check for pawn promotion immediately after the move.
-  await checkPromotion(square);
+  const promotionResult = await checkPromotion(square);
+  if (promotionResult === false) {
+      oldSquare.append(piece);
+      if (target) {
+          square.append(target);
+      }
+      if (moveHistory.lastElementChild) {
+          moveHistory.lastElementChild.remove();
+      }
+      gameBoard.querySelectorAll('.highlight, .selected').forEach(sq => {
+          sq.classList.remove('highlight', 'selected');
+      });
+      selected = null;
+      return false;
+  }
 
   // Remove the move highlights after the piece moves.
   gameBoard.querySelectorAll('.highlight').forEach(square => {
@@ -173,7 +408,13 @@ async function movePieceToSquare(piece, square) {
 
     // Switch whose turn it is and update the turn display.
     currentPlayer = currentPlayer === 'White' ? 'Black' : 'White';
-  playerDisplay.textContent = currentPlayer;
+    if (typeof updateTurnDisplay === 'function') {
+        updateTurnDisplay();
+    } else {
+        playerDisplay.textContent = currentPlayer;
+    }
+
+    saveHistorySnapshot();
 
   // The player whose turn it is loses if they are in check with no legal move.
   if (isKingInCheck(currentPlayer) && !hasAnyLegalMovesLeft(currentPlayer)) {
@@ -181,7 +422,12 @@ async function movePieceToSquare(piece, square) {
     gameOver = true;
     updateScore(winner);
     showWinner(winner);
-    document.querySelector('#win-message').textContent = `${winner} wins by checkmate!`;
+    const winMessageEl = document.querySelector('#win-message');
+    if (winMessageEl) {
+        const isDutch = typeof currentLang !== 'undefined' && currentLang === 'nl';
+        const winnerName = isDutch ? (winner === 'White' ? 'Wit' : 'Zwart') : winner;
+        winMessageEl.textContent = isDutch ? `${winnerName} wint door schaakmat!` : `${winner} wins by checkmate!`;
+    }
     document.querySelector('#win-dialog').showModal();
     selected = null;
     return true;
@@ -189,9 +435,10 @@ async function movePieceToSquare(piece, square) {
   return true;
 }
 
-// Clear the move list when starting a new game.
+// Clear the move list and snapshots when starting a new game.
 document.querySelector('#resetButton').addEventListener('click', () => {
     moveHistory.innerHTML = '';
+    clearHistorySnapshots();
 });
 
 // End the current drag and remove its temporary visual effects.
@@ -209,7 +456,7 @@ function clearDrag() {
 
 // Start tracking a drag when the player presses the left mouse button on a piece.
 gameBoard.addEventListener('pointerdown', event => {
-    if (gameOver) return;
+    if (gameOver || viewingHistoryIndex !== null) return;
 
     const piece = event.target.closest('.piece');
     const square = piece?.closest('.square');

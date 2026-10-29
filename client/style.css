@@ -23,6 +23,16 @@ body {
 header {
     width: min(100%, 960px);
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.header-text {
+    flex: 1;
+    min-width: 240px;
 }
 
 header h1 {
@@ -33,6 +43,48 @@ header h1 {
 header p {
     margin: 0;
     color: #aaa69f;
+}
+
+.lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #262522;
+    border: 1px solid #494641;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.lang-flag-btn {
+    min-height: 32px;
+    padding: 0 10px;
+    background: transparent;
+    color: #aaa69f;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.lang-flag-btn:hover {
+    color: white;
+    background: #35332f;
+}
+
+.lang-flag-btn.active {
+    background: rgb(155, 9, 9);
+    color: white;
+    border-color: rgb(155, 9, 9);
+}
+
+.flag-icon {
+    font-size: 1.15rem;
+    line-height: 1;
 }
 
 .game-layout {
@@ -141,13 +193,34 @@ header p {
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.15s ease, outline-color 0.15s ease;
+}
+
+#move-history li:hover {
+    background: #2a2926;
+}
+
+#move-history li.active-history {
+    background: #383531;
+    outline: 1px solid #706b63;
+}
+
+.revert-history-btn {
+    display: none;
+    width: 100%;
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
 }
 
 .move-history-piece {
     width: 20px;
     height: 20px;
     flex: 0 0 20px;
-    fill: currentColor;
 }
 
 dialog {
@@ -167,6 +240,30 @@ dialog::backdrop {
 dialog button {
     margin: 6px;
     background: rgb(155, 9, 9);
+}
+
+#promotion-dialog {
+    position: relative;
+}
+
+#promotion-dialog .dialog-close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    color: #aaa69f;
+    font-size: 1.8rem;
+    line-height: 1;
+    padding: 0 6px;
+    min-height: auto;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+#promotion-dialog .dialog-close-btn:hover {
+    color: white;
 }
 
 .promotion-options {
@@ -331,9 +428,24 @@ button:active {
 
 /* Scale each piece and its SVG to fill the containing square. */
 .piece,
+.piece svg,
 .piece svg image {
     width: 100%;
     height: 100%;
+}
+
+/* Distinguish the lower side's pieces with a light fill and dark outline for vector SVG pieces. */
+.white {
+    fill: white;
+    stroke: rgb(22, 22, 0);
+    stroke-width: 32px;
+}
+
+/* Distinguish the upper side's pieces with a dark fill and light outline for vector SVG pieces. */
+.black {
+    fill: black;
+    stroke: rgb(255, 255, 255);
+    stroke-width: 32px;
 }
 
 /* Keep the white PNG artwork and add a dark edge around its silhouette. */
@@ -523,4 +635,179 @@ body {
     50% {
         background-color: red;
     }
+}
+
+/* Rules Pop-up Dashboard Styles matching sitewide architecture */
+#rules-dialog {
+    width: min(760px, calc(100% - 32px));
+    max-height: 85vh;
+    padding: 0;
+    border: 1px solid #494641;
+    border-radius: 10px;
+    background: #262522;
+    color: white;
+    text-align: left;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+}
+
+.rules-modal-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+}
+
+.rules-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: #262522;
+    border-bottom: 1px solid #494641;
+}
+
+.rules-header-title h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.rules-header-subtitle {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: #aaa69f;
+}
+
+#rules-dialog .rules-close-btn {
+    margin: 0;
+    background: transparent;
+    border: 0;
+    color: #aaa69f;
+    font-size: 1.8rem;
+    line-height: 1;
+    padding: 0 8px;
+    min-height: auto;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+#rules-dialog .rules-close-btn:hover {
+    color: white;
+}
+
+.rules-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #1d1c1a;
+    border-bottom: 1px solid #494641;
+}
+
+.rules-tab-btn {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 0.88rem;
+    background: #262522;
+    color: #c5c1b8;
+    border: 1px solid #494641;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.rules-tab-btn:hover {
+    background: #35332f;
+    color: white;
+}
+
+.rules-tab-btn.active {
+    background: rgb(155, 9, 9);
+    color: white;
+    border-color: rgb(155, 9, 9);
+}
+
+.rules-body {
+    padding: 18px 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.rules-tab-panel {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rules-tab-panel.active {
+    display: flex;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+}
+
+.rules-card {
+    background: #1d1c1a;
+    border: 1px solid #494641;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.rules-card h3 {
+    margin: 0 0 8px;
+    color: rgb(155, 9, 9);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rules-piece-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: white;
+}
+
+.rules-card p,
+.rules-card ul {
+    margin: 0;
+    font-size: 0.88rem;
+    color: #c5c1b8;
+    line-height: 1.5;
+}
+
+.rules-card p + p {
+    margin-top: 6px;
+}
+
+.rules-card ul {
+    padding-left: 18px;
+    margin-top: 6px;
+}
+
+.rules-card li {
+    margin-bottom: 4px;
+}
+
+.rules-card strong {
+    color: white;
+}
+
+.rules-footer {
+    padding: 12px 20px;
+    background: #262522;
+    border-top: 1px solid #494641;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#rules-dialog .rules-footer button {
+    margin: 0;
+    background: rgb(155, 9, 9);
 }

@@ -17,7 +17,21 @@ function checkPromotion(square) {
     });
 }
 
+function cancelPromotion() {
+    if (!pendingPromotion) return;
+    const { resolve } = pendingPromotion;
+    pendingPromotion = null;
+    promotionDialog.close();
+    resolve(false);
+}
+
 promotionDialog.addEventListener('click', event => {
+    // Close / cancel if clicking close button or clicking outside dialog backdrop
+    if (event.target.closest('#close-promotion-button') || event.target === promotionDialog) {
+        cancelPromotion();
+        return;
+    }
+
     const button = event.target.closest('.promotion-piece');
     if (!button || !pendingPromotion) return;
 
@@ -33,12 +47,14 @@ promotionDialog.addEventListener('click', event => {
     promotedPiece.querySelector('svg').classList.add(side);
     promotedPiece.setAttribute('draggable', false);
 
+    const { resolve } = pendingPromotion;
     pendingPromotion.piece.replaceWith(promotedPiece);
     promotionDialog.close();
-    pendingPromotion.resolve();
     pendingPromotion = null;
+    resolve(true);
 });
 
 promotionDialog.addEventListener('cancel', event => {
     event.preventDefault();
+    cancelPromotion();
 });

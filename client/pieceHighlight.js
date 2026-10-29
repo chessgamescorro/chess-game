@@ -19,7 +19,7 @@ function highlightMoves(piece) {
 
 // Select a piece or move the selected piece when the player clicks the board.
 gameBoard.addEventListener('click', event => {
-    if (gameOver) return;
+    if (gameOver || (typeof viewingHistoryIndex !== 'undefined' && viewingHistoryIndex !== null)) return;
 
     // A drag already handled this interaction, so ignore its follow-up click.
     if (suppressClick) {

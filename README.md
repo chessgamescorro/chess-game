@@ -12,6 +12,9 @@ Een compleet speelbaar schaakspel voor in de browser, gemaakt door Redouan, Miko
 - Speel door tot schaakmat en ontdek wie de winnaar is.
 - Volg de partij met de zettenlijst, de geslagen stukken en de score.
 - Personaliseer je bord met verschillende kleurthema's en draai het bord wanneer je wilt.
+- Wissel van speelstijl: kies op elk moment tussen de unieke handgetekende stukken en strakke klassieke vector-SVG's.
+- Leer het spel in het pop-up dashboard: raadpleeg op elk moment de complete uitleg over alle stukken, regels en spelbediening.
+- Schakel eenvoudig van taal: wissel direct tussen Nederlands en Engels met de vlag-switcher in de header.
 - Geniet van een geluidseffect bij iedere geldige zet.
 
 We blijven het spel uitbreiden: en passant slaan en remiseherkenning, zoals pat, zijn ideeën voor toekomstige verbeteringen.
@@ -30,13 +33,14 @@ Je kunt ook `client/index.html` rechtstreeks openen in een moderne browser.
 
 ## Projectstructuur
 
-De code is per verantwoordelijkheid ingedeeld. `index.html` brengt de pagina en scripts samen, `style.css` verzorgt de vormgeving en de JavaScript-bestanden verdelen de spelregels en interactie over aparte onderdelen: stukdefinities, bordopbouw, beweging, schaakcontrole, bediening, promotie en score. De speelstukafbeeldingen staan bij de client-assets.
+De code is per verantwoordelijkheid ingedeeld. `index.html` brengt de pagina en scripts samen, `style.css` verzorgt de vormgeving en de JavaScript-bestanden verdelen de spelregels en interactie over aparte onderdelen: stukdefinities en -wissel, bordopbouw, beweging, schaakcontrole, bediening, promotie, score en meertaligheid. De speelstukafbeeldingen staan bij de client-assets.
 
 ```text
 client/
-  index.html         Spelpagina
-  style.css          Stijlen voor het bord en de interface
-  main.js            Bordopbouw, thema's, draaien en resetten
+  index.html         Spelpagina en spelregeldashboard
+  style.css          Stijlen voor het bord, dialoogvensters en de interface
+  main.js            Bordopbouw, thema's, draaien, dashboard en meertaligheid
+  piece.js           Stukdefinities (handgetekende afbeeldingen en vector-SVG's)
   movement.js        Bewegingsregels voor stukken en rokade
   check.js           Schaak- en legale-zettencontrole
   drag.js            Zetbediening, slaan, zettenlijst en schaakmat

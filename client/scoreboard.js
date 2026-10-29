@@ -16,5 +16,7 @@ function updateScore(player) {
 }
 // Shows the winner message in the scoreboard section.
 function showWinner(player) {
-    kingState.textContent = `${player} wins!`;
+    const isDutch = typeof currentLang !== 'undefined' && currentLang === 'nl';
+    const playerName = isDutch ? (player === 'White' ? 'Wit' : 'Zwart') : player;
+    kingState.textContent = isDutch ? `${playerName} wint!` : `${player} wins!`;
 }

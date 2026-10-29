@@ -1,25 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Game</title>
+    <title>Chess Game / Schaakspel</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <header>
-        <h1>Schaakspel Projectweek 1 2026</h1>
-
-        <p>Gebouwd in HTML, CSS, JavaScript door Redouan, Mikolaj, Wiktoria, Grantas</p>
+        <div class="header-text">
+            <h1 data-i18n="headerTitle">Schaakspel Projectweek 1 2026</h1>
+            <p data-i18n="headerSubtitle">Gebouwd in HTML, CSS, JavaScript door Redouan, Mikolaj, Wiktoria, Grantas</p>
+        </div>
+        <div class="lang-switcher" aria-label="Taalkeuze / Language selection">
+            <button type="button" class="lang-flag-btn active" data-lang="nl" title="Nederlands" aria-label="Nederlands">
+                <span class="flag-icon" aria-hidden="true">🇳🇱</span> NL
+            </button>
+            <button type="button" class="lang-flag-btn" data-lang="en" title="English" aria-label="English">
+                <span class="flag-icon" aria-hidden="true">🇬🇧</span> EN
+            </button>
+        </div>
     </header>
 
     <main class="game-layout">
         <div class="scoreboard">
-    <h2> Scoreboard</h2>
-    <p> White: <span id="whiteScore">0</span></p>
-    <p> Black: <span id="blackScore">0</span></p>
-</div>
+            <h2 data-i18n="scoreboardHeading">Scoreboard</h2>
+            <p><span data-i18n="whiteLabel">White:</span> <span id="whiteScore">0</span></p>
+            <p><span data-i18n="blackLabel">Black:</span> <span id="blackScore">0</span></p>
+        </div>
         <section class="board-area" aria-label="Chess board and captured pieces">
             <!-- JavaScript fills these containers with captured pieces. -->
             <div id="captured-black" class="captured" aria-label="Captured black pieces"></div>
@@ -41,39 +50,190 @@
         <aside class="game-panel" aria-label="Game controls">
 
             <div class="turn-indicator">
-                <p>It's <span id="player"></span>'s turn</p>
+                <p><span id="turnPrefix">It's </span><span id="player"></span><span id="turnSuffix">'s turn</span></p>
             </div>
 
             <p id="King-display" class="game-message" aria-live="polite"></p>
 
             <section class="move-history" aria-labelledby="move-history-heading">
-                <h2 id="move-history-heading">Move history</h2>
+                <h2 id="move-history-heading" data-i18n="moveHistoryHeading">Move history</h2>
                 <ol id="move-history" aria-live="polite"></ol>
+                <button id="revertHistoryBtn" class="secondary-button revert-history-btn" type="button" data-i18n="returnToLiveGame">Return to live game</button>
             </section>
 
             <div class="game-actions">
-                <button id="resetButton" class="reset">New game</button>
-                <button id="changeboard" class="secondary-button">Change theme</button>
-                <button id="rotateBoard" class="secondary-button">Rotate board</button>
-             </div>
+                <button id="resetButton" class="reset" data-i18n="newGame">New game</button>
+                <button id="changeboard" class="secondary-button" data-i18n="changeTheme">Change theme</button>
+                <button id="rotateBoard" class="secondary-button" data-i18n="rotateBoard">Rotate board</button>
+                <button id="changePieces" class="secondary-button" data-i18n="changePieces">Change pieces</button>
+                <button id="rulesButton" class="secondary-button" data-i18n="chessRules">Chess rules</button>
+            </div>
         </aside>
     </main>
 
     <dialog id="promotion-dialog" aria-labelledby="promotion-heading">
-        <h2 id="promotion-heading">Pawn promotion</h2>
-        <p>Select a piece to promote your pawn:</p>
+        <button id="close-promotion-button" class="dialog-close-btn" type="button" aria-label="Sluit promotiedialoog / Close promotion">&times;</button>
+        <h2 id="promotion-heading" data-i18n="promotionHeading">Pawn promotion</h2>
+        <p data-i18n="promotionPrompt">Select a piece to promote your pawn:</p>
         <div class="promotion-options">
-            <button class="promotion-piece" type="button" data-piece="queen">Queen</button>
-            <button class="promotion-piece" type="button" data-piece="rook">Rook</button>
-            <button class="promotion-piece" type="button" data-piece="bishop">Bishop</button>
-            <button class="promotion-piece" type="button" data-piece="knight">Knight</button>
+            <button class="promotion-piece" type="button" data-piece="queen" data-i18n="queen">Queen</button>
+            <button class="promotion-piece" type="button" data-piece="rook" data-i18n="rook">Rook</button>
+            <button class="promotion-piece" type="button" data-piece="bishop" data-i18n="bishop">Bishop</button>
+            <button class="promotion-piece" type="button" data-piece="knight" data-i18n="knight">Knight</button>
         </div>
     </dialog>
 
     <dialog id="win-dialog">
         <h2 id="win-message"></h2>
-        <button id="view-board-button" type="button">View board</button>
-        <button id="new-game-button" type="button">New game</button>
+        <button id="view-board-button" type="button" data-i18n="viewBoard">View board</button>
+        <button id="new-game-button" type="button" data-i18n="newGame">New game</button>
+    </dialog>
+
+    <!-- Chess Explanation Pop-up Dashboard -->
+    <dialog id="rules-dialog" class="rules-dialog" aria-labelledby="rules-heading">
+        <div class="rules-modal-container">
+            <header class="rules-header">
+                <div class="rules-header-title">
+                    <h2 id="rules-heading" data-i18n="rulesHeading">Chess Guide & Dashboard</h2>
+                    <p class="rules-header-subtitle" data-i18n="rulesSubtitle">Everything you need to know about chess and how to play</p>
+                </div>
+                <button id="close-rules-button" class="rules-close-btn" type="button" aria-label="Close rules dialog">&times;</button>
+            </header>
+
+            <nav class="rules-tabs" aria-label="Chess explanation sections">
+                <button class="rules-tab-btn active" data-tab="overview" data-i18n="tabOverview" type="button">Overview & Goal</button>
+                <button class="rules-tab-btn" data-tab="pieces" data-i18n="tabPieces" type="button">Pieces & Movement</button>
+                <button class="rules-tab-btn" data-tab="special" data-i18n="tabSpecial" type="button">Special Rules</button>
+                <button class="rules-tab-btn" data-tab="controls" data-i18n="tabControls" type="button">How to Play</button>
+            </nav>
+
+            <div class="rules-body">
+                <!-- Overview Panel -->
+                <div id="tab-overview" class="rules-tab-panel active">
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3 data-i18n="goalTitle">Goal of the Game</h3>
+                            <p data-i18n="goalDesc">The ultimate objective in chess is to <strong>checkmate</strong> the opponent's king. This happens when the opponent's king is under immediate attack (in check) and has no legal escape.</p>
+                        </div>
+                        <div class="rules-card">
+                            <h3 data-i18n="boardTitle">The Board & Setup</h3>
+                            <p data-i18n="boardDesc">Chess is played on an <strong>8&times;8 grid</strong> with 64 alternating dark and light squares. Horizontal rows are called <strong>ranks</strong> (1–8) and vertical columns are <strong>files</strong> (a–h).</p>
+                        </div>
+                    </div>
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3 data-i18n="turnsTitle">Turn Order & Clock</h3>
+                            <p data-i18n="turnsDesc"><strong>White always moves first</strong>. Players take turns moving one piece per turn. You cannot skip or pass a turn, and you can never move into or remain in check.</p>
+                        </div>
+                        <div class="rules-card">
+                            <h3 data-i18n="capturesTitle">Capturing Pieces</h3>
+                            <p data-i18n="capturesDesc">A piece captures an enemy piece by landing on its square. The captured piece is permanently removed from the board into the captured tray. The King is never captured.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pieces Panel -->
+                <div id="tab-pieces" class="rules-tab-panel">
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3><span class="rules-piece-icon" aria-hidden="true">♔</span> <span data-i18n="kingName">King</span></h3>
+                            <p data-i18n="kingMoves"><strong>Moves:</strong> 1 square in any direction (horizontal, vertical, diagonal).</p>
+                            <p data-i18n="kingRole"><strong>Role:</strong> The most crucial piece. Must be defended at all costs. Can participate in castling with an unmoved rook.</p>
+                        </div>
+                        <div class="rules-card">
+                            <h3><span class="rules-piece-icon" aria-hidden="true">♕</span> <span data-i18n="queenName">Queen</span></h3>
+                            <p data-i18n="queenMoves"><strong>Moves:</strong> Any number of empty squares horizontally, vertically, or diagonally.</p>
+                            <p data-i18n="queenRole"><strong>Role:</strong> The most powerful attacking piece on the board, combining the powers of a rook and bishop.</p>
+                        </div>
+                    </div>
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3><span class="rules-piece-icon" aria-hidden="true">♖</span> <span data-i18n="rookName">Rook</span></h3>
+                            <p data-i18n="rookMoves"><strong>Moves:</strong> Any number of empty squares in a straight line along ranks (rows) or files (columns).</p>
+                            <p data-i18n="rookRole"><strong>Role:</strong> Dominates open files and coordinates with the king for castling.</p>
+                        </div>
+                        <div class="rules-card">
+                            <h3><span class="rules-piece-icon" aria-hidden="true">♗</span> <span data-i18n="bishopName">Bishop</span></h3>
+                            <p data-i18n="bishopMoves"><strong>Moves:</strong> Any number of empty squares diagonally.</p>
+                            <p data-i18n="bishopRole"><strong>Role:</strong> Stays on squares of its starting color for the entire match (light-squared or dark-squared).</p>
+                        </div>
+                    </div>
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3><span class="rules-piece-icon" aria-hidden="true">♘</span> <span data-i18n="knightName">Knight</span></h3>
+                            <p data-i18n="knightMoves"><strong>Moves:</strong> In an "L-shape": two squares in one direction and one square perpendicular.</p>
+                            <p data-i18n="knightSpecial"><strong>Special:</strong> The <em>only</em> piece that can jump over other friendly or enemy pieces!</p>
+                        </div>
+                        <div class="rules-card">
+                            <h3><span class="rules-piece-icon" aria-hidden="true">♙</span> <span data-i18n="pawnName">Pawn</span></h3>
+                            <p data-i18n="pawnMoves"><strong>Moves:</strong> 1 square forward (or 2 squares forward on its very first move). Captures 1 square diagonally forward.</p>
+                            <p data-i18n="pawnSpecial"><strong>Special:</strong> Cannot move backward. Promotes upon reaching the opposite end of the board.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Rules Panel -->
+                <div id="tab-special" class="rules-tab-panel">
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3 data-i18n="checkTitle">Check & Checkmate</h3>
+                            <ul data-i18n="checkList">
+                                <li><strong>Check:</strong> When a king is attacked. The player must escape check immediately by moving the king, blocking the attack, or capturing the attacker.</li>
+                                <li><strong>Checkmate:</strong> When the king is in check and cannot escape. Checkmate immediately concludes the match with a win!</li>
+                            </ul>
+                        </div>
+                        <div class="rules-card">
+                            <h3 data-i18n="castlingTitle">Castling (Rokade)</h3>
+                            <p data-i18n="castlingDesc">A special joint move where the king moves 2 squares toward a rook, and the rook hops over to the square beside the king.</p>
+                            <ul data-i18n="castlingList">
+                                <li>Neither the king nor the rook has moved yet.</li>
+                                <li>All squares between them must be empty.</li>
+                                <li>The king cannot castle out of, through, or into check.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rules-card">
+                        <h3 data-i18n="promotionCardTitle">Pawn Promotion</h3>
+                        <p data-i18n="promotionCardDesc">When a pawn reaches the furthest rank on the board (rank 8 for White, rank 1 for Black), it immediately promotes into a <strong>Queen, Rook, Bishop, or Knight</strong>. A popup dialog will appear for you to choose your promoted piece.</p>
+                    </div>
+                </div>
+
+                <!-- Controls & Website Features Panel -->
+                <div id="tab-controls" class="rules-tab-panel">
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3 data-i18n="howToMoveTitle">How to Move</h3>
+                            <p data-i18n="howToMoveDesc">Click on any piece of your color to select it — dots will appear highlighting all legal destination squares. Click an empty highlighted square or enemy piece to complete your move. You can also drag and drop pieces directly.</p>
+                        </div>
+                        <div class="rules-card">
+                            <h3 data-i18n="changePiecesTitle">Change Pieces</h3>
+                            <p data-i18n="changePiecesDesc">Use the <strong>Change pieces</strong> button in the action panel to switch dynamically between the custom hand-drawn pieces and the classic vector SVG chess pieces at any time without resetting the game.</p>
+                        </div>
+                    </div>
+                    <div class="rules-grid">
+                        <div class="rules-card">
+                            <h3 data-i18n="themesRotationTitle">Themes & Rotation</h3>
+                            <ul data-i18n="themesRotationList">
+                                <li><strong>Change theme:</strong> Cycles through different board palettes (Red & Dark, Pastel Pink, Cyan Blue, Forest Green).</li>
+                                <li><strong>Rotate board:</strong> Flips the board 180&deg; for White or Black perspective.</li>
+                            </ul>
+                        </div>
+                        <div class="rules-card">
+                            <h3 data-i18n="scoreHistoryTitle">Scoreboard & New Game</h3>
+                            <ul data-i18n="scoreHistoryList">
+                                <li><strong>Scoreboard:</strong> Keeps track of wins for White and Black across your play sessions.</li>
+                                <li><strong>Move history:</strong> Logs every move with piece icons and coordinates (e.g. e2 &rarr; e4).</li>
+                                <li><strong>New game:</strong> Clears the board and starts a fresh match.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="rules-footer">
+                <button id="rules-got-it-button" type="button" class="reset" data-i18n="gotItBtn">Got it, let's play!</button>
+            </footer>
+        </div>
     </dialog>
 
     <script src="piece.js"></script>
